@@ -4,13 +4,15 @@ import org.bitbucket.calvinmwhu.chess.chessboard.*;
 import java.util.ArrayList;
 
 public abstract class Piece {
-    protected Location location;
+    protected int rank;
+    protected int file;
     protected String color;
     protected String name;
     protected String hashKey;
 
     public Piece(int rank, int file){
-        location = new Location(rank, file);
+        this.rank = rank;
+        this.file = file;
     }
 
     public void setColor(String color){
@@ -20,12 +22,12 @@ public abstract class Piece {
         this.name=name;
     }
     public void setLocation(int rank, int file){
-        location.setRankPos(file);
-        location.setFilePos(file);
+        this.rank = rank;
+        this.file = file;
     }
 
     public void setHashKey(){
-        hashKey = color+" "+name;
+        hashKey = color+"_"+name;
     }
 
     public String getColor(){
@@ -35,8 +37,12 @@ public abstract class Piece {
         return name;
     }
 
-    public Location getLocation(){
-        return location;
+    public int getRank(){
+        return rank;
+    }
+
+    public int getFile(){
+        return file;
     }
     public String getHashKey(){
         return hashKey;
@@ -46,17 +52,16 @@ public abstract class Piece {
         return "";
     }
 
-    public ArrayList<Location> getNeighbours(){
-        ArrayList<Location> neighbours = new ArrayList<Location>();
-        int rank = location.getRankPos();
-        int file = location.getFilePos();
-        neighbours.add(new Location(rank+1,file));
-        neighbours.add(new Location(rank-1,file));
-        neighbours.add(new Location(rank,file+1));
-        neighbours.add(new Location(rank,file-1));
+    public ArrayList<Square> getNeighbours(){
+        ArrayList<Square> neighbours = new ArrayList<Square>();
+        neighbours.add(new Square(rank,file));
+        neighbours.add(new Square(rank+1,file));
+        neighbours.add(new Square(rank-1,file));
+        neighbours.add(new Square(rank,file+1));
+        neighbours.add(new Square(rank,file-1));
         return neighbours;
     }
 
-    public abstract boolean canMoveToLocation(Board board, Location location);
+    public abstract boolean canMoveToLocation(Board board, int rankDes, int fileDes);
 
 }

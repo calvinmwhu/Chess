@@ -15,13 +15,14 @@ public class King extends Piece {
         setHashKey();
     }
 
-    public boolean canMoveToLocation(Board board, Location location) {
-        int rank = this.location.getRankPos();
-        int file = this.location.getFilePos();
-        int rankdes = location.getRankPos();
-        int filedes = location.getFilePos();
+    public boolean canMoveToLocation(Board board, int rankdes, int filedes) {
+        int rank = this.rank;
+        int file = this.file;
 
-        if (rank+1 == rankdes && file==filedes || rank-1==rankdes && file==filedes || rank==rankdes && file - 1==filedes || rank==rankdes && file+1==filedes){
+        if (rank + 1 == rankdes && file == filedes ||
+                rank - 1 == rankdes && file == filedes ||
+                rank == rankdes && file - 1 == filedes ||
+                rank == rankdes && file + 1 == filedes) {
             return true;
         }
 

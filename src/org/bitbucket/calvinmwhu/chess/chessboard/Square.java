@@ -3,10 +3,10 @@ package org.bitbucket.calvinmwhu.chess.chessboard;
 /**
  * Created by calvinmwhu on 2/11/15.
  */
-public class Location {
+public class Square {
     private int rankPos;
     private int filePos;
-    public Location(int rank, int file){
+    public Square(int rank, int file){
         rankPos=rank;
         filePos=file;
     }

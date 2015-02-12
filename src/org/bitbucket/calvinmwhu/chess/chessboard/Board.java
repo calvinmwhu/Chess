@@ -18,30 +18,31 @@ public abstract class Board {
         whitePlayer=null;
     }
 
-    public boolean validRange(Location location){
+    public boolean validRange(int rank, int file){
         return false;
     }
 
-    public void movePiece(Location origin, Location destination){
-        Piece fromPiece=getPieceAtLocation(origin);
-        Piece toPiece=getPieceAtLocation(destination);
-        if(fromPiece!=null && fromPiece.canMoveToLocation(this,destination)) {
-            if(toPiece!=null){
-                //topiece got captured.. print sth here, and remove it
-            }
+    public void movePiece(int fromRank, int fromFile, int toRank, int toFile){
+        if(!validRange(fromRank, fromFile) || !validRange(toRank,toFile) || (fromRank==toRank && fromFile==toFile)){
+            return;
+        }
+        Piece fromPiece=pieces[fromRank][fromFile];
+        Piece toPiece=pieces[toRank][toFile];
+        if(fromPiece!=null && (toPiece==null || (!fromPiece.getColor().equals(toPiece.getColor())) && fromPiece.canMoveToLocation(this,toRank, toFile)) ) {
+            //move the piece and capture/kill the destination.
         }
     }
 
-    public Piece getPieceAtLocation(Location location){
-        if(validRange(location)){
-            return pieces[location.getRankPos()][location.getFilePos()];
+    public Piece getPieceAtLocation(int rank, int file){
+        if(validRange(rank, file)){
+            return pieces[rank][file];
         }
         return null;
     }
 
-    public void setPiecesAtLocation(Piece piece, Location location){
-        if(validRange(location)){
-            pieces[location.getRankPos()][location.getFilePos()]=piece;
+    public void setPiecesAtLocation(Piece piece, int rank, int file){
+        if(validRange(rank, file)){
+            pieces[rank][file]=piece;
         }
     }
 
