@@ -63,5 +63,4 @@ public abstract class Piece {
     }
 
     public abstract boolean canMoveToLocation(Board board, int rankDes, int fileDes);
-
 }

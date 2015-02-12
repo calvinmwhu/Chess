@@ -5,12 +5,12 @@ import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 /**
  * Created by calvinmwhu on 2/11/15.
  */
-public class Bishop extends Piece {
+public class Pawn extends Piece {
     private static int id = 0;
 
-    public Bishop(String color, int rank, int file) {
+    public Pawn(String color, int rank, int file) {
         super(rank, file);
-        setName("Bishop");
+        setName("Pawn");
         setColor(color);
         setHashKey();
         id++;
@@ -23,18 +23,19 @@ public class Bishop extends Piece {
     public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
         int rank = this.rank;
         int file = this.file;
-        if (Math.abs(rank - rankDes) == Math.abs(file - fileDes)) {
-            do {
-                rank = rank + (rank < rankDes ? 1 : -1);
-                file = rank + (file < fileDes ? 1 : -1);
-            } while ((rank != rankDes && file != fileDes) || board.getPieceAtLocation(rank, file) == null);
 
-            if (rank == rankDes && file == fileDes) {
+        if (board.getPieceAtLocation(rankDes, fileDes) == null) {
+            if (fileDes != file) {
+                return false;
+            }
+            if (Math.abs(rankDes - rank) == 1 || (Math.abs(rankDes - rank) == 2 && board.atPawnStartPosition(rank))) {
+                return true;
+            }
+        } else {
+            if (Math.abs(fileDes - file) == 1 && Math.abs(rankDes - rank) == 1) {
                 return true;
             }
         }
-
         return false;
     }
-
 }

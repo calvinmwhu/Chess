@@ -1,6 +1,6 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
-import org.bitbucket.calvinmwhu.chess.chessboard.*;
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 
 /**
  * Created by calvinmwhu on 2/11/15.
@@ -15,19 +15,22 @@ public class King extends Piece {
         setHashKey();
     }
 
-    public boolean canMoveToLocation(Board board, int rankdes, int filedes) {
+    public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
         int rank = this.rank;
         int file = this.file;
 
-        if (rank + 1 == rankdes && file == filedes ||
-                rank - 1 == rankdes && file == filedes ||
-                rank == rankdes && file - 1 == filedes ||
-                rank == rankdes && file + 1 == filedes) {
+        if (rank + 1 == rankDes && file == fileDes ||
+                rank - 1 == rankDes && file == fileDes ||
+                rank == rankDes && file - 1 == fileDes ||
+                rank == rankDes && file + 1 == fileDes ||
+                rank + 1 == rankDes && file + 1 == fileDes ||
+                rank - 1 == rankDes && file - 1 == fileDes ||
+                rank + 1 == rankDes && file - 1 == fileDes ||
+                rank - 1 == rankDes && file + 1 == fileDes) {
             return true;
         }
 
         return false;
     }
-
 
 }

@@ -8,6 +8,8 @@ import java.util.*;
  */
 public abstract class Board {
     protected Piece[][] pieces;
+    protected String black = "Black";
+    protected String white = "White";
     protected HashMap<String, Piece> blackPlayer;
     protected HashMap<String, Piece> whitePlayer;
     protected boolean gameEnded;
@@ -18,9 +20,9 @@ public abstract class Board {
         whitePlayer=null;
     }
 
-    public boolean validRange(int rank, int file){
-        return false;
-    }
+    public abstract boolean validRange(int rank, int file);
+    public abstract boolean atPawnStartPosition(int rank);
+    public abstract void setupBoard();
 
     public void movePiece(int fromRank, int fromFile, int toRank, int toFile){
         if(!validRange(fromRank, fromFile) || !validRange(toRank,toFile) || (fromRank==toRank && fromFile==toFile)){
@@ -49,4 +51,5 @@ public abstract class Board {
     public boolean checkmated(){
         return false;
     }
+
 }
