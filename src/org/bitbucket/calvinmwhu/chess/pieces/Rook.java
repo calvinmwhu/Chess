@@ -17,7 +17,7 @@ public class Rook extends Piece {
     }
 
     public void setHashKey() {
-        hashKey = color + "_" + name + "_" + id;
+        hashKey = name + "_" + id;
     }
 
     public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {

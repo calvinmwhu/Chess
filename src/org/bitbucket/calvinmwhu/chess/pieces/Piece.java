@@ -2,6 +2,7 @@ package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Piece {
     protected int rank;
@@ -27,7 +28,7 @@ public abstract class Piece {
     }
 
     public void setHashKey(){
-        hashKey = color+"_"+name;
+        hashKey = getName();
     }
 
     public String getColor(){
@@ -47,18 +48,21 @@ public abstract class Piece {
     public String getHashKey(){
         return hashKey;
     }
-
     public String getId(){
         return "";
     }
 
-    public ArrayList<Square> getNeighbours(){
-        ArrayList<Square> neighbours = new ArrayList<Square>();
+    public LinkedList<Square> getNeighbours(){
+        LinkedList<Square> neighbours = new LinkedList<Square>();
         neighbours.add(new Square(rank,file));
         neighbours.add(new Square(rank+1,file));
         neighbours.add(new Square(rank-1,file));
         neighbours.add(new Square(rank,file+1));
         neighbours.add(new Square(rank,file-1));
+        neighbours.add(new Square(rank-1,file-1));
+        neighbours.add(new Square(rank+1,file-1));
+        neighbours.add(new Square(rank-1,file+1));
+        neighbours.add(new Square(rank+1,file+1));
         return neighbours;
     }
 

@@ -19,9 +19,9 @@ public class SquareBoard extends Board {
         this.width = width;
         this.height = height;
         pieces = new Piece[this.height][this.width];
-        for(int i=0; i<this.height;i++){
-            for(int j=0; j<this.width; j++){
-                pieces[i][j]=null;
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                pieces[i][j] = null;
             }
         }
     }
@@ -51,6 +51,14 @@ public class SquareBoard extends Board {
         for (int i = 0; i < this.width; i++) {
             pieces[1][i] = new Pawn(white, 1, i);
             pieces[6][i] = new Pawn(black, 6, i);
+        }
+
+        for (int i = 0; i < this.width; i++) {
+            whitePlayer.put(pieces[0][i].getHashKey(), pieces[0][i]);
+            whitePlayer.put(pieces[1][i].getHashKey(), pieces[1][i]);
+
+            blackPlayer.put(pieces[7][i].getHashKey(), pieces[7][i]);
+            blackPlayer.put(pieces[6][i].getHashKey(), pieces[6][i]);
         }
 
     }
