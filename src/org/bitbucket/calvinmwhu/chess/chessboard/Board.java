@@ -17,31 +17,33 @@ public abstract class Board {
         blackPlayer=null;
         whitePlayer=null;
     }
-    public boolean validRange(int rank, int file){
+
+    public boolean validRange(Location location){
         return false;
     }
-    public void movePiece(int fromRank, int fromFile, int toRank, int toFile){
-        Piece piece;
-        if(validRange(fromRank, fromFile) && validRange(toRank, toFile) && ((piece = getPieceAtLocation(fromRank, fromFile)) != null)){
-            Piece toPiece = getPieceAtLocation(toRank,toFile);
-            if(piece.getColor()!=toPiece.getColor()){
-                
+
+    public void movePiece(Location origin, Location destination){
+        Piece fromPiece=getPieceAtLocation(origin);
+        Piece toPiece=getPieceAtLocation(destination);
+        if(fromPiece!=null && fromPiece.canMoveToLocation(this,destination)) {
+            if(toPiece!=null){
+                //topiece got captured.. print sth here, and remove it
             }
         }
     }
 
-    public Piece getPieceAtLocation(int rank, int file){
-        if(validRange(rank,file)){
-            return pieces[rank][file];
+    public Piece getPieceAtLocation(Location location){
+        if(validRange(location)){
+            return pieces[location.getRankPos()][location.getFilePos()];
         }
         return null;
     }
-    public void setPiecesAtLocation(Piece piece, int rank, int file){
-        if(validRange(rank, file)){
-            pieces[rank][file]=piece;
+
+    public void setPiecesAtLocation(Piece piece, Location location){
+        if(validRange(location)){
+            pieces[location.getRankPos()][location.getFilePos()]=piece;
         }
     }
-
 
     public boolean checkmated(){
         return false;

@@ -10,16 +10,16 @@ public class Location {
         rankPos=rank;
         filePos=file;
     }
-    int getRankPos(){
+    public int getRankPos(){
         return rankPos;
     }
-    int getFilePos(){
+    public int getFilePos(){
         return filePos;
     }
-    void setRankPos(int rank){
+    public void setRankPos(int rank){
         rankPos=rank;
     }
-    void setFilePos(int file){
+    public void setFilePos(int file){
         filePos=file;
     }
 }
