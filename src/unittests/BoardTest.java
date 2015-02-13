@@ -17,6 +17,16 @@ public class BoardTest {
     }
 
     @Test
+    public void testGetWidth() throws Exception {
+
+    }
+
+    @Test
+    public void testGetHeight() throws Exception {
+
+    }
+
+    @Test
     public void testSetupBoard() throws Exception {
 
     }

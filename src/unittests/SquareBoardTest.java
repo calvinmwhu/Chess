@@ -2,6 +2,7 @@ package unittests;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
+import org.bitbucket.calvinmwhu.chess.pieces.Queen;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -67,9 +68,9 @@ public class SquareBoardTest {
     @Test
     public void testValidRange() throws Exception {
         Board squareBoard = new SquareBoard();
-        assertTrue(squareBoard.validRange(7, 9));
-        assertTrue(squareBoard.validRange(8, 8));
-        assertTrue(squareBoard.validRange(1, 9));
+        assertFalse(squareBoard.validRange(7, 9));
+        assertFalse(squareBoard.validRange(8, 8));
+        assertFalse(squareBoard.validRange(1, 9));
     }
 
     @Test
@@ -79,5 +80,52 @@ public class SquareBoardTest {
         assertTrue(squareBoard.atPawnStartPosition(6));
         assertFalse(squareBoard.atPawnStartPosition(5));
         assertFalse(squareBoard.atPawnStartPosition(2));
+    }
+
+    @Test
+    public void testGetWidth() throws Exception {
+        Board board = new SquareBoard();
+        assertEquals(board.getWidth(),8);
+    }
+
+    @Test
+    public void testGetHeight() throws Exception {
+        Board board = new SquareBoard();
+        assertEquals(board.getHeight(), 8);
+    }
+
+    @Test
+    public void testMovePiece() throws Exception {
+        Board board = new SquareBoard();
+        board.setupBoard();
+
+        assertArrayEquals(board.movePiece(1, 1, 3, 1).getBytes(), "move to empty location (3,1)".getBytes());
+        assertArrayEquals(board.movePiece(6, 2, 4, 2).getBytes() ,"move to empty location (4,2)".getBytes());
+        assertArrayEquals(board.movePiece(3, 1, 3, 1).getBytes(), "Invalid range selected".getBytes());
+
+        assertArrayEquals(board.movePiece(3, 1, 4, 2).getBytes(), "capturing piece at location (4,2)".getBytes());
+    }
+
+    @Test
+    public void testAttackerCanKillPieceAtLocation() throws  Exception{
+        Board board = new SquareBoard();
+        board.setupBoard();
+        assertFalse(board.attackerCanKillPieceAtLocation("White",0,4));
+    }
+
+    @Test
+    public void testChecked() throws Exception {
+        Board board = new SquareBoard();
+        board.setupBoard();
+        assertFalse(board.checked("Black"));
+        assertFalse(board.checked("White"));
+    }
+
+    @Test
+    public void testCheckmated() throws Exception {
+        Board board = new SquareBoard();
+        board.setupBoard();
+        assertFalse(board.checkmated("Black"));
+        assertFalse(board.checkmated("White"));
     }
 }

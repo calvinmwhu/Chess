@@ -25,12 +25,12 @@ public class Rook extends Piece {
         int file = this.file;
         if (rank - rankDes == 0 || file - fileDes == 0) {
             int rankStep = rank == rankDes ? 0 : (rankDes - rank) / (Math.abs(rankDes - rank));
-            int fileStep = rank == fileDes ? 0 : (fileDes - file) / (Math.abs(fileDes - file));
+            int fileStep = file == fileDes ? 0 : (fileDes - file) / (Math.abs(fileDes - file));
 
             do {
                 rank = rank + rankStep;
-                file = rank + fileStep;
-            } while ((rank != rankDes && file != fileDes) || board.getPieceAtLocation(rank, file) == null);
+                file = file + fileStep;
+            } while ((rank != rankDes || file != fileDes) && board.getPieceAtLocation(rank, file) == null);
 
             if (rank == rankDes && file == fileDes) {
                 return true;

@@ -70,10 +70,18 @@ public class SquareBoard extends Board {
             blackPlayer.put(pieces[6][i].getHashKey(), pieces[6][i]);
         }
 
+//        for(String key : whitePlayer.keySet()){
+//            System.out.println(whitePlayer.get(key).getColor()+"_"+whitePlayer.get(key).getHashKey());
+//        }
+//
+//        for(String key : blackPlayer.keySet()){
+//            System.out.println(blackPlayer.get(key).getColor()+"_"+blackPlayer.get(key).getHashKey());
+//        }
+
     }
 
     public boolean validRange(int rank, int file) {
-        return (rank >= 0 || rank < height) && (file >= 0 || file < width);
+        return rank >= 0 && rank < height && file >= 0 && file < width;
     }
 
     public boolean atPawnStartPosition(int rank) {
