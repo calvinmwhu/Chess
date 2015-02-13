@@ -10,7 +10,7 @@ public class Queen extends Piece {
 
     public Queen(String color, int rank, int file) {
         super(rank, file);
-        setName("Rook");
+        setName("Queen");
         setColor(color);
         setHashKey();
     }
@@ -20,11 +20,13 @@ public class Queen extends Piece {
         int file = this.file;
         if (Math.abs(rank - rankDes) == Math.abs(file - fileDes) || rank - rankDes == 0 || file - fileDes == 0) {
             int rankStep = rank == rankDes ? 0 : (rankDes - rank) / (Math.abs(rankDes - rank));
-            int fileStep = rank == fileDes ? 0 : (fileDes - file) / (Math.abs(fileDes - file));
+            int fileStep = file == fileDes ? 0 : (fileDes - file) / (Math.abs(fileDes - file));
+
             do {
                 rank = rank + rankStep;
-                file = rank + fileStep;
-            } while ((rank != rankDes && file != fileDes) || board.getPieceAtLocation(rank, file) == null);
+                file = file + fileStep;
+//                System.out.println(rank+" "+file);
+            } while ((rank != rankDes || file != fileDes) && board.getPieceAtLocation(rank, file) == null);
 
             if (rank == rankDes && file == fileDes) {
                 return true;

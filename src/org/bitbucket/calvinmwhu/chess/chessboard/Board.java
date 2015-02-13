@@ -25,6 +25,10 @@ public abstract class Board {
 
     public abstract boolean atPawnStartPosition(int rank);
 
+
+    public abstract int getWidth();
+    public abstract int getHeight();
+
     public abstract void setupBoard();
 
     public String movePiece(int fromRank, int fromFile, int toRank, int toFile) {

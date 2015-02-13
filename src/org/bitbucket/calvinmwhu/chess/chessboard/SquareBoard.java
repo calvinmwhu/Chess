@@ -15,15 +15,24 @@ public class SquareBoard extends Board {
     private int width;
     private int height;
 
-    public SquareBoard(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public int getWidth(){
+        return width;
+    }
+    public int getHeight(){
+        return height;
+    }
+
+    public SquareBoard() {
+        this.width = WIDTH;
+        this.height = WIDTH;
         pieces = new Piece[this.height][this.width];
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
                 pieces[i][j] = null;
             }
         }
+        whitePlayer = new HashMap<String, Piece>();
+        blackPlayer = new HashMap<String, Piece>();
     }
 
     public void setupBoard() {

@@ -26,8 +26,8 @@ public class Bishop extends Piece {
         if (Math.abs(rank - rankDes) == Math.abs(file - fileDes)) {
             do {
                 rank = rank + (rank < rankDes ? 1 : -1);
-                file = rank + (file < fileDes ? 1 : -1);
-            } while ((rank != rankDes && file != fileDes) || board.getPieceAtLocation(rank, file) == null);
+                file = file + (file < fileDes ? 1 : -1);
+            } while ((rank != rankDes || file != fileDes) && board.getPieceAtLocation(rank, file) == null);
 
             if (rank == rankDes && file == fileDes) {
                 return true;
