@@ -76,5 +76,12 @@ public abstract class Piece {
         return neighbours;
     }
 
+    /**
+     *
+     * @param board
+     * @param rankDes
+     * @param fileDes
+     * @return
+     */
     public abstract boolean canMoveToLocation(Board board, int rankDes, int fileDes);
 }

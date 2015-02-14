@@ -31,6 +31,14 @@ public abstract class Board {
 
     public abstract void setupBoard();
 
+    /**
+     *
+     * @param fromRank
+     * @param fromFile
+     * @param toRank
+     * @param toFile
+     * @return
+     */
     public String movePiece(int fromRank, int fromFile, int toRank, int toFile) {
         String result = "cannot move to location (" + String.valueOf(toRank) + "," + String.valueOf(toFile) + ")";
         if (!validRange(fromRank, fromFile) || !validRange(toRank, toFile) || (fromRank == toRank && fromFile == toFile)) {
@@ -61,6 +69,12 @@ public abstract class Board {
         return result;
     }
 
+    /**
+     *
+     * @param rank
+     * @param file
+     * @return
+     */
     public Piece getPieceAtLocation(int rank, int file) {
         if (validRange(rank, file)) {
             return pieces[rank][file];
@@ -68,12 +82,25 @@ public abstract class Board {
         return null;
     }
 
+    /**
+     *
+     * @param piece
+     * @param rank
+     * @param file
+     */
     public void setPiecesAtLocation(Piece piece, int rank, int file) {
         if (validRange(rank, file)) {
             pieces[rank][file] = piece;
         }
     }
 
+    /**
+     *
+     * @param targetColor
+     * @param rank
+     * @param file
+     * @return
+     */
     public boolean attackerCanKillPieceAtLocation(String targetColor, int rank, int file) {
         HashMap<String, Piece> attacker = targetColor.equals(black) ? whitePlayer : blackPlayer;
         for (String key : attacker.keySet()) {
@@ -85,6 +112,11 @@ public abstract class Board {
         return false;
     }
 
+    /**
+     *
+     * @param targetColor
+     * @return
+     */
     public boolean checked(String targetColor){
         HashMap<String, Piece> target = targetColor.equals(white) ? whitePlayer : blackPlayer;
         HashMap<String, Piece> attacker = targetColor.equals(black) ? whitePlayer : blackPlayer;
@@ -98,6 +130,11 @@ public abstract class Board {
         return false;
     }
 
+    /**
+     *
+     * @param targetColor
+     * @return
+     */
     public boolean checkmated(String targetColor) {
         HashMap<String, Piece> target = targetColor.equals(white) ? whitePlayer : blackPlayer;
         HashMap<String, Piece> attacker = targetColor.equals(black) ? whitePlayer : blackPlayer;
