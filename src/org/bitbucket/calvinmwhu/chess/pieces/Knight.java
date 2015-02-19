@@ -1,24 +1,19 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 
 /**
  * Created by calvinmwhu on 2/11/15.
  */
 public class Knight extends Piece {
-    private static int id = 0;
-
-    public Knight(String color, int rank, int file) {
-        super(rank, file);
-        setName("Knight");
-        setColor(color);
-        setHashKey();
-        id++;
+    public Knight(Player player, int index) {
+        super(player);
+        this.index = index;
+        this.name = PieceName.KNIGHT
     }
 
-    public void setHashKey() {
-        hashKey = name + "_" + id;
-    }
 
     public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
         int rank = this.rank;

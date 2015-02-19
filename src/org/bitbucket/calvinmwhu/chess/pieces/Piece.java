@@ -1,83 +1,69 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.*;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public abstract class Piece {
-    protected int rank;
-    protected int file;
-    protected String color;
-    protected String name;
-    protected String hashKey;
+    protected BoardTile tileUnderPiece;
+    protected int index;
+    protected Player player;
+    protected PieceName name;
+    protected HashSet<BoardTile> reachableTiles;
 
-    public Piece(int rank, int file) {
-        this.rank = rank;
-        this.file = file;
+    public Piece(Player player) {
+        this.player = player;
+        this.tileUnderPiece = null;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setHashKey() {
-        hashKey = getName();
-    }
-
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    public void setFile(int file) {
-        this.file = file;
-    }
-
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getName() {
+    public PieceName getName() {
         return name;
     }
 
-    public int getRank() {
-        return rank;
+    public int getIndex() {
+        return index;
     }
 
-    public int getFile() {
-        return file;
+    public Player getPlayer() {
+        return player;
     }
 
-    public String getHashKey() {
-        return hashKey;
+    public BoardTile getTileUnderPiece() {
+        return tileUnderPiece;
     }
 
-    public String getId() {
-        return "";
+    public int getRank(){
+        return tileUnderPiece.getRankPos();
     }
 
-    public LinkedList<Square> getNeighbours() {
-        LinkedList<Square> neighbours = new LinkedList<Square>();
-        neighbours.add(new Square(rank, file));
-        neighbours.add(new Square(rank + 1, file));
-        neighbours.add(new Square(rank - 1, file));
-        neighbours.add(new Square(rank, file + 1));
-        neighbours.add(new Square(rank, file - 1));
-        neighbours.add(new Square(rank - 1, file - 1));
-        neighbours.add(new Square(rank + 1, file - 1));
-        neighbours.add(new Square(rank - 1, file + 1));
-        neighbours.add(new Square(rank + 1, file + 1));
+    public int getFile(){
+        return tileUnderPiece.getFilePos();
+    }
+
+    protected void setTileUnderPiece(BoardTile tile) {
+        tileUnderPiece = tile;
+    }
+
+
+
+    public LinkedList<BoardTile> getNeighbours() {
+        LinkedList<BoardTile> neighbours = new LinkedList<BoardTile>();
+        neighbours.add(new BoardTile(rank, file));
+        neighbours.add(new BoardTile(rank + 1, file));
+        neighbours.add(new BoardTile(rank - 1, file));
+        neighbours.add(new BoardTile(rank, file + 1));
+        neighbours.add(new BoardTile(rank, file - 1));
+        neighbours.add(new BoardTile(rank - 1, file - 1));
+        neighbours.add(new BoardTile(rank + 1, file - 1));
+        neighbours.add(new BoardTile(rank - 1, file + 1));
+        neighbours.add(new BoardTile(rank + 1, file + 1));
         return neighbours;
     }
 
     /**
-     *
      * @param board
      * @param rankDes
      * @param fileDes

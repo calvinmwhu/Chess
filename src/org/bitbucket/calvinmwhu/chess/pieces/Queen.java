@@ -1,18 +1,17 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 
 /**
  * Created by calvinmwhu on 2/11/15.
  */
 public class Queen extends Piece {
-    private static int id = 0;
 
-    public Queen(String color, int rank, int file) {
-        super(rank, file);
-        setName("Queen");
-        setColor(color);
-        setHashKey();
+    public Queen(Player player) {
+        super(player);
+        this.name = PieceName.QUEEN;
     }
 
     public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {

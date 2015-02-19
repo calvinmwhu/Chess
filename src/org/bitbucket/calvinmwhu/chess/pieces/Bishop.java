@@ -1,19 +1,17 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 
 /**
  * Created by calvinmwhu on 2/11/15.
  */
 public class Bishop extends Piece {
-    private static int id = 0;
-
-    public Bishop(String color, int rank, int file) {
-        super(rank, file);
-        setName("Bishop");
-        setColor(color);
-        setHashKey();
-        id++;
+    public Bishop(Player player, int index) {
+        super(player);
+        this.index = index;
+        this.name = PieceName.BISHOP;
     }
 
     public void setHashKey() {

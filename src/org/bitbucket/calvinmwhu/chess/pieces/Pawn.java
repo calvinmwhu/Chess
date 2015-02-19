@@ -1,24 +1,20 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 
 /**
  * Created by calvinmwhu on 2/11/15.
  */
 public class Pawn extends Piece {
-    private static int id = 0;
 
-    public Pawn(String color, int rank, int file) {
-        super(rank, file);
-        setName("Pawn");
-        setColor(color);
-        setHashKey();
-        id++;
+    public Pawn(Player player, int index) {
+        super(player);
+        this.index = index;
+        this.name = PieceName.PAWN;
     }
 
-    public void setHashKey() {
-        hashKey = name + "_" + id;
-    }
 
     public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
         int rank = this.rank;
