@@ -1,38 +1,33 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
+import org.bitbucket.calvinmwhu.chess.path.Path;
 import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
+
+import java.util.ArrayList;
 
 /**
  * Created by calvinmwhu on 2/11/15.
  */
 public class Bishop extends Piece {
-    public Bishop(Player player, int index) {
-        super(player);
+    public Bishop(Board board, Player player, int index) {
+        super(board, player);
         this.index = index;
         this.name = PieceName.BISHOP;
     }
 
-    public void setHashKey() {
-        hashKey = name + "_" + id;
-    }
+    public void updateReachableTiles() {
+        reachableTiles.clear();
+        Path path = new Path(getRank(), getFile(), getPlayer(), board);
+        ArrayList<BoardTile> tiles = new ArrayList<BoardTile>();
 
-    public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
-        int rank = this.rank;
-        int file = this.file;
-        if (Math.abs(rank - rankDes) == Math.abs(file - fileDes)) {
-            do {
-                rank = rank + (rank < rankDes ? 1 : -1);
-                file = file + (file < fileDes ? 1 : -1);
-            } while ((rank != rankDes || file != fileDes) && board.getPieceAtLocation(rank, file) == null);
-
-            if (rank == rankDes && file == fileDes) {
-                return true;
-            }
-        }
-
-        return false;
+        tiles.addAll(path.getPathInDirection(1, 1)); //go upright
+        tiles.addAll(path.getPathInDirection(1, -1)); //go upleft
+        tiles.addAll(path.getPathInDirection(-1, 1)); //go downright
+        tiles.addAll(path.getPathInDirection(-1, -1)); //go downleft
+        reachableTiles.addAll(tiles);
     }
 
 }

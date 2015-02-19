@@ -4,7 +4,7 @@ package org.bitbucket.calvinmwhu.chess.values;
  * Created by calvinmwhu on 2/18/15.
  */
 public enum Player {
-    WHITE("White"), BLACK("Black");
+    WHITE("White"), BLACK("Black"), UNOCCUPIED("Unoccupied");
 
     private final String color;
     Player(String color){

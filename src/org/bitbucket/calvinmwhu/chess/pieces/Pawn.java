@@ -1,6 +1,7 @@
 package org.bitbucket.calvinmwhu.chess.pieces;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
@@ -9,29 +10,36 @@ import org.bitbucket.calvinmwhu.chess.values.Player;
  */
 public class Pawn extends Piece {
 
-    public Pawn(Player player, int index) {
-        super(player);
+    public Pawn(Board board, Player player, int index) {
+        super(board, player);
         this.index = index;
         this.name = PieceName.PAWN;
     }
 
+    public void updateReachableTiles() {
+        reachableTiles.clear();
+        int rank = getRank();
+        int file = getFile();
+        int offset = player == Player.WHITE ? 1 : -1;
 
-    public boolean canMoveToLocation(Board board, int rankDes, int fileDes) {
-        int rank = this.rank;
-        int file = this.file;
-
-        if (board.getPieceAtLocation(rankDes, fileDes) == null) {
-            if (fileDes != file) {
-                return false;
-            }
-            if (Math.abs(rankDes - rank) == 1 || (Math.abs(rankDes - rank) == 2 && board.atPawnStartPosition(rank))) {
-                return true;
-            }
-        } else {
-            if (Math.abs(fileDes - file) == 1 && Math.abs(rankDes - rank) == 1) {
-                return true;
-            }
+        //start position
+        BoardTile tile1 = board.getTileAtLocation(rank + 1 * offset, file);
+        BoardTile tile2 = board.getTileAtLocation(rank + 2 * offset, file);
+        BoardTile tile3 = board.getTileAtLocation(rank + 1 * offset, file + 1 * offset);
+        BoardTile tile4 = board.getTileAtLocation(rank + 1 * offset, file - 1 * offset);
+        if (tile1 != null && tile1.getPlayerAtTile() == Player.UNOCCUPIED) {
+            reachableTiles.add(tile1);
         }
-        return false;
+        if (board.pawnStartPosition(this) && tile2 != null && tile2.getPlayerAtTile() == Player.UNOCCUPIED) {
+            reachableTiles.add(tile2);
+        }
+        if (tile3 != null && tile3.getPlayerAtTile() != player && tile3.getPlayerAtTile() != Player.UNOCCUPIED) {
+            reachableTiles.add(tile3);
+        }
+        if (tile4 != null && tile4.getPlayerAtTile() != player && tile4.getPlayerAtTile() != Player.UNOCCUPIED) {
+            reachableTiles.add(tile4);
+        }
+
     }
+
 }

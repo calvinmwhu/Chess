@@ -16,12 +16,18 @@ public abstract class Board {
 
 
     public abstract int getWidth();
+
     public abstract int getHeight();
+
     public abstract boolean validRange(int rank, int file);
-    public abstract boolean atPawnStartPosition(int rank);
-    public abstract void setupBoard();
 
     public abstract void putPiecesOnBoard(HashMap<String, Piece> whitePlayer, HashMap<String, Piece> blackPlayer);
+
+    public abstract boolean pawnStartPosition(Piece piece);
+
+    public BoardTile getTileAtLocation(int rank, int file) {
+        return null;
+    }
 
 
 //
