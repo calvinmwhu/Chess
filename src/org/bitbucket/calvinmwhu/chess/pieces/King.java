@@ -16,16 +16,17 @@ public class King extends Piece {
         this.name = PieceName.KING;
     }
 
-    public void updateReachableTiles(){
+    public void updateReachableTiles() {
         reachableTiles.clear();
         int rank = getRank();
         int file = getFile();
 
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                if(i!=0 && j!=0 && board.validRange(rank+i, file+j)){
-                    BoardTile tile = board.getTileAtLocation(rank+i, file+j);
-                    if(tile.getPlayerAtTile()!=this.player){
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if(i==0 && j==0) continue;
+                if (board.validRange(rank + i, file + j)) {
+                    BoardTile tile = board.getTileAtLocation(rank + i, file + j);
+                    if (tile.getPlayerAtTile() != this.player) {
                         reachableTiles.add(tile);
                     }
                 }

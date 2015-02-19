@@ -23,13 +23,17 @@ public class Game {
         turn = Player.WHITE;
     }
 
-    public void setUpBoardAndPieces(BoardShape shape) {
+    public void initContent(BoardShape shape) {
         if (shape == BoardShape.SQUARE) {
             chessBoard = new SquareBoard();
         } else {
             System.out.println("other board shape not implemented yet!");
         }
         setUpPieces();
+    }
+
+    public void setUpBoardAndPieces(BoardShape shape) {
+        initContent(shape);
         chessBoard.putPiecesOnBoard(whitePlayer, blackPlayer);
     }
 
@@ -67,14 +71,31 @@ public class Game {
         }
     }
 
-    public Board getChessBoard(){
+    public Board getChessBoard() {
         return chessBoard;
     }
-    public HashMap<String, Piece> getPlayers(Player player){
-        return player==Player.WHITE? whitePlayer:blackPlayer;
-    }
-    public void movePiece(int fromRank, int fromFile, int toRank, int toFile) {
 
+    public HashMap<String, Piece> getPlayers(Player player) {
+        return player == Player.WHITE ? whitePlayer : blackPlayer;
+    }
+
+    public Piece getPieceAt(int rank, int file) {
+        if (chessBoard.validRange(rank, file)) {
+            return chessBoard.getTileAtLocation(rank, file).getOccupyingPiece();
+        }
+        return null;
+    }
+
+    public void readyToMove(Piece piece) {
+        piece.updateReachableTiles();
+    }
+
+    public boolean movePieceTo(Piece piece, int toRank, int toFile) {
+        if (!piece.moveToPosition(toRank, toFile)) {
+            System.out.println("Cannot move to (" + toRank + "," + toFile + ")");
+            return false;
+        }
+        return true;
     }
 
 

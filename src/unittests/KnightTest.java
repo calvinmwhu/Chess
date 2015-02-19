@@ -1,37 +1,41 @@
-//package unittests;
-//
-//import org.bitbucket.calvinmwhu.chess.pieces.Knight;
-//import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class KnightTest {
-//
-//    @Test
-//    public void testSetHashKey() throws Exception {
-//        Piece knight0 = new Knight("white", 3, 3);
-//        assertArrayEquals(knight0.getHashKey().getBytes(), "Knight_0".getBytes());
-//        Piece knight1 = new Knight("white", 3, 3);
-//        assertArrayEquals(knight1.getHashKey().getBytes(), "Knight_1".getBytes());
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocation() throws Exception {
-//        Piece knight = new Knight("white", 3, 3);
-//        assertTrue(knight.canMoveToLocation(null, 4, 5));
-//        assertTrue(knight.canMoveToLocation(null, 2, 5));
-//        assertTrue(knight.canMoveToLocation(null, 5, 4));
-//        assertTrue(knight.canMoveToLocation(null, 1, 4));
-//
-//        assertTrue(knight.canMoveToLocation(null, 5, 2));
-//        assertTrue(knight.canMoveToLocation(null, 1, 2));
-//        assertTrue(knight.canMoveToLocation(null, 4, 1));
-//        assertTrue(knight.canMoveToLocation(null, 2, 1));
-//
-//        assertFalse(knight.canMoveToLocation(null, 5, 3));
-//        assertFalse(knight.canMoveToLocation(null, 1, 3));
-//        assertFalse(knight.canMoveToLocation(null, 3, 1));
-//        assertFalse(knight.canMoveToLocation(null, 2, 3));
-//    }
-//}
+package unittests;
+
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.game.Game;
+import org.bitbucket.calvinmwhu.chess.pieces.Knight;
+import org.bitbucket.calvinmwhu.chess.pieces.Piece;
+import org.bitbucket.calvinmwhu.chess.values.BoardShape;
+import org.bitbucket.calvinmwhu.chess.values.Player;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class KnightTest {
+
+
+    @Test
+    public void testMoveToLocationBarrier() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece whiteKnight=game.getPlayers(Player.WHITE).get("Knight1");
+        Piece whitePawn1=game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece blackQueen=game.getPlayers(Player.BLACK).get("Queen");
+        Piece blackKing = game.getPlayers(Player.BLACK).get("King");
+        Piece whitePawn2=game.getPlayers(Player.WHITE).get("Pawn1");
+
+        whiteKnight.setTileUnderPiece(board.getTileAtLocation(0,3));
+        whitePawn1.setTileUnderPiece(board.getTileAtLocation(4,1));
+        whitePawn2.setTileUnderPiece(board.getTileAtLocation(2,5));
+        blackKing.setTileUnderPiece(board.getTileAtLocation(1,2));
+        blackQueen.setTileUnderPiece(board.getTileAtLocation(5,4));
+
+        whiteKnight.updateReachableTiles();
+        whitePawn1.updateReachableTiles();
+        whitePawn2.updateReachableTiles();
+        blackKing.updateReachableTiles();
+        blackQueen.updateReachableTiles();
+
+        System.out.println("testing move: whiteKing: " + whiteKnight.getReachableTiles());
+    }
+}

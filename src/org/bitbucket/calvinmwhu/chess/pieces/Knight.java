@@ -28,9 +28,11 @@ public class Knight extends Piece {
         for (int i = 0; i < rankJump.length; i++) {
             for (int j = 0; j < fileJump.length; j++) {
                 if (Math.abs(rankJump[i]) != Math.abs(fileJump[j])) {
-                    BoardTile tile = board.getTileAtLocation(rankJump[i], fileJump[j]);
-                    if (tile.getPlayerAtTile() != player) {
-                        reachableTiles.add(tile);
+                    if (board.validRange(rank + rankJump[i], file + fileJump[j])) {
+                        BoardTile tile = board.getTileAtLocation(rank + rankJump[i], file + fileJump[j]);
+                        if (tile.getPlayerAtTile() != player) {
+                            reachableTiles.add(tile);
+                        }
                     }
                 }
             }

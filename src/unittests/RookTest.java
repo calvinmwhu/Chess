@@ -1,46 +1,49 @@
-//package unittests;
-//
-//import org.bitbucket.calvinmwhu.chess.chessboard.Board;
-//import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
-//import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-//import org.bitbucket.calvinmwhu.chess.pieces.Rook;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class RookTest {
-//
-//    @Test
-//    public void testSetHashKey() throws Exception {
-//        Piece rook0 = new Rook("white",3,3);
-//        Piece rook1 = new Rook("white",3,3);
-////
-////        assertArrayEquals(rook0.getHashKey().getBytes(),"Rook_0".getBytes());
-////        assertArrayEquals(rook1.getHashKey().getBytes(),"Rook_1".getBytes());
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocationEmptyBoard() throws Exception {
-//        Piece rook = new Rook("white",3,3);
-//        Board board = new SquareBoard();
-//
-//        assertTrue(rook.canMoveToLocation(board,3,5));
-//        assertTrue(rook.canMoveToLocation(board,3,1));
-//        assertTrue(rook.canMoveToLocation(board, 5, 3));
-//        assertTrue(rook.canMoveToLocation(board, 1, 3));
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocationRandomBoard() throws Exception {
-//        Piece rook = new Rook("white",3,3);
-//        Board board = new SquareBoard();
-//        board.setPiecesAtLocation(new Rook("white",3,4),3,4);
-//        board.setPiecesAtLocation(new Rook("white",4,3),4,3);
-//
-//        assertFalse(rook.canMoveToLocation(board, 3, 5));
-//        assertFalse(rook.canMoveToLocation(board, 5, 3));
-//
-//    }
-//
-//
-//}
+package unittests;
+
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
+import org.bitbucket.calvinmwhu.chess.game.Game;
+import org.bitbucket.calvinmwhu.chess.pieces.Piece;
+import org.bitbucket.calvinmwhu.chess.pieces.Rook;
+import org.bitbucket.calvinmwhu.chess.values.BoardShape;
+import org.bitbucket.calvinmwhu.chess.values.Player;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class RookTest {
+
+    @Test
+    public void testCanMoveToLocationEmptyBoard() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece blackRook=game.getPlayers(Player.BLACK).get("Rook1");
+        blackRook.setTileUnderPiece(board.getTileAtLocation(2, 5));
+        blackRook.updateReachableTiles();
+//        System.out.println(blackRook.getReachableTiles());
+    }
+
+    @Test
+    public void testCanMoveToLocationRandomBoard() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece blackRook=game.getPlayers(Player.BLACK).get("Rook1");
+        Piece whitePawn1=game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece blackQueen=game.getPlayers(Player.BLACK).get("Queen");
+        Piece blackKing = game.getPlayers(Player.BLACK).get("King");
+        Piece whitePawn2=game.getPlayers(Player.WHITE).get("Pawn1");
+
+
+        blackRook.setTileUnderPiece(board.getTileAtLocation(3,3));
+        whitePawn1.setTileUnderPiece(board.getTileAtLocation(4,3));
+        whitePawn2.setTileUnderPiece(board.getTileAtLocation(1,3));
+        blackKing.setTileUnderPiece(board.getTileAtLocation(3,2));
+        blackQueen.setTileUnderPiece(board.getTileAtLocation(3,4));
+        System.out.println(blackRook.getReachableTiles());
+
+    }
+
+
+}

@@ -47,7 +47,7 @@ public abstract class Piece {
         return tileUnderPiece.getFilePos();
     }
 
-    public HashSet<BoardTile> getReachableTiles(){
+    public HashSet<BoardTile> getReachableTiles() {
         return reachableTiles;
     }
 
@@ -73,10 +73,32 @@ public abstract class Piece {
 //        return neighbours;
 //    }
 
-//    @Override
+    //    @Override
 //    public String toString() {
 //        return player.getColor()+name.getName()+
 //    }
 //
     public abstract void updateReachableTiles();
+
+    public void killPiece(Piece target) {
+        target.setTileUnderPiece(null);
+        System.out.println(target.getPlayer().getColor() + target.getName().getName() + " killed by " + player.getColor() + name.getName());
+    }
+
+    public boolean moveToPosition(int rank, int file) {
+        BoardTile toTile = board.getTileAtLocation(rank, file);
+        if (reachableTiles.contains(toTile)) {
+            if (toTile.getPlayerAtTile() != Player.UNOCCUPIED) {
+                //kill piece
+                killPiece(toTile.getOccupyingPiece());
+            }else{
+                System.out.println(player.getColor() + name.getName()+"moves to "+ toTile);
+            }
+            tileUnderPiece.setOccupyingPiece(null);
+            setTileUnderPiece(toTile);
+            return true;
+        }
+        return false;
+    }
+
 }
