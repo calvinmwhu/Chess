@@ -128,7 +128,7 @@ public class GameTest {
 
     }
 
-    
+
     @Test
     public void testCheckMateFalse() throws Exception{
         Game game = new Game();
