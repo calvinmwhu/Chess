@@ -1,6 +1,7 @@
 package org.bitbucket.calvinmwhu.chess.game;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
 import org.bitbucket.calvinmwhu.chess.pieces.*;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
@@ -9,6 +10,7 @@ import org.bitbucket.calvinmwhu.chess.values.Player;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Created by calvinmwhu on 2/18/15.
@@ -87,7 +89,8 @@ public class Game {
     }
 
     public void readyToMove(Piece piece) {
-        piece.updateReachableTiles();
+//        piece.updateReachableTiles();
+        //highlight UI
     }
 
     public boolean movePieceTo(Piece piece, int toRank, int toFile) {
@@ -96,6 +99,52 @@ public class Game {
             return false;
         }
         return true;
+    }
+
+
+    public boolean checkKing(Piece targetKing) {
+        HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
+        BoardTile tile = targetKing.getTileUnderPiece();
+        for (Piece piece : attackerPieces.values()) {
+//            System.out.println(piece.getPlayer().getColor() + piece.getName().getName() + " can move to " + piece.getReachableTiles());
+            if (piece.getReachableTiles().contains(tile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean playerCanKillKingAtTile(HashMap<String, Piece> playerPieces, BoardTile targetTile) {
+        for (Piece piece : playerPieces.values()) {
+            if (piece.canKillKingAtTile(targetTile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkMate(Piece targetKing) {
+        HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
+        HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
+        for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext();) {
+            BoardTile tile = it.next();
+            if (playerCanKillKingAtTile(attackerPieces, tile)) {
+                it.remove();
+            }
+        }
+        return checkMatePositions.isEmpty();
+    }
+
+
+    public void updateConfiguration() {
+        updateConfigurationForPlayer(whitePlayer);
+        updateConfigurationForPlayer(blackPlayer);
+    }
+
+    public void updateConfigurationForPlayer(HashMap<String, Piece> playerPieces) {
+        for (Piece piece : playerPieces.values()) {
+            piece.updateReachableTiles();
+        }
     }
 
 

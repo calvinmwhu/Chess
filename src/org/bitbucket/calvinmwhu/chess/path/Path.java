@@ -22,7 +22,6 @@ public class Path {
         this.board = board;
     }
 
-
     public ArrayList<BoardTile> getPathInDirection(int rankOffset, int fileOffset) {
         ArrayList<BoardTile> tiles = new ArrayList<BoardTile>();
         int rankPos = rank;
@@ -43,7 +42,5 @@ public class Path {
         }
         return tiles;
     }
-
-
 
 }

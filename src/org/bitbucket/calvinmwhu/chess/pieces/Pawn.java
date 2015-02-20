@@ -17,6 +17,7 @@ public class Pawn extends Piece {
     }
 
     public void updateReachableTiles() {
+        if (removedFromBoard()) return;
         reachableTiles.clear();
         int rank = getRank();
         int file = getFile();
@@ -39,6 +40,22 @@ public class Pawn extends Piece {
         if (tile4 != null && tile4.getPlayerAtTile() != player && tile4.getPlayerAtTile() != Player.UNOCCUPIED) {
             reachableTiles.add(tile4);
         }
+
+    }
+
+
+    public boolean canKillKingAtTile(BoardTile toTile) {
+        if (removedFromBoard()) return false;
+        int rank = getRank();
+        int file = getFile();
+        int rankDes = toTile.getRankPos();
+        int fileDes = toTile.getFilePos();
+        int offset = player == Player.WHITE ? 1 : -1;
+
+        BoardTile tile1 = board.getTileAtLocation(rank + 1 * offset, file + 1 * offset);
+        BoardTile tile2 = board.getTileAtLocation(rank + 1 * offset, file - 1 * offset);
+
+        return tile1 == toTile || tile2 == toTile;
 
     }
 

@@ -73,16 +73,23 @@ public class SquareBoard extends Board {
     }
 
     public BoardTile getTileAtLocation(int rank, int file) {
-        if(validRange(rank, file)){
+        if (validRange(rank, file)) {
             return boardTiles[rank][file];
         }
         return null;
     }
+
+    public Piece getPieceAtLocation(int rank, int file) {
+        BoardTile tile = getTileAtLocation(rank, file);
+        return (tile == null) ? null : tile.getOccupyingPiece();
+    }
+
+
     public boolean validRange(int rank, int file) {
         return rank >= 0 && rank < height && file >= 0 && file < width;
     }
 
-    public boolean pawnStartPosition(Piece piece){
-        return (piece.getPlayer()== Player.WHITE && piece.getRank()==1) || (piece.getPlayer()== Player.BLACK && piece.getRank()==6);
+    public boolean pawnStartPosition(Piece piece) {
+        return (piece.getPlayer() == Player.WHITE && piece.getRank() == 1) || (piece.getPlayer() == Player.BLACK && piece.getRank() == 6);
     }
 }

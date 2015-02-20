@@ -18,6 +18,7 @@ public class Knight extends Piece {
     }
 
     public void updateReachableTiles() {
+        if (removedFromBoard()) return;
         reachableTiles.clear();
         int rank = getRank();
         int file = getFile();
@@ -38,6 +39,29 @@ public class Knight extends Piece {
             }
         }
 
+    }
+
+    public boolean canKillKingAtTile(BoardTile toTile) {
+        if (removedFromBoard()) return false;
+        int rank = getRank();
+        int file = getFile();
+        int rankDes = toTile.getRankPos();
+        int fileDes = toTile.getFilePos();
+
+        int[] rankJump = {-2, -1, 1, 2};
+        int[] fileJump = {-2, -1, 1, 2};
+
+        for (int i = 0; i < rankJump.length; i++) {
+            for (int j = 0; j < fileJump.length; j++) {
+                if (Math.abs(rankJump[i]) != Math.abs(fileJump[j]) &&
+                        rank + rankJump[i] == rankDes &&
+                        file + fileJump[j] == fileDes) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

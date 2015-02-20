@@ -19,6 +19,7 @@ public class Queen extends Piece {
     }
 
     public void updateReachableTiles() {
+        if (removedFromBoard()) return;
         reachableTiles.clear();
         Path path = new Path(getRank(), getFile(), getPlayer(), board);
         ArrayList<BoardTile> tiles = new ArrayList<BoardTile>();
@@ -36,4 +37,28 @@ public class Queen extends Piece {
         reachableTiles.addAll(tiles);
     }
 
+    public boolean canKillKingAtTile(BoardTile toTile) {
+        if (removedFromBoard() || toTile==tileUnderPiece) return false;
+        int rank = getRank();
+        int file = getFile();
+        int rankDes = toTile.getRankPos();
+        int fileDes = toTile.getFilePos();
+
+        if (Math.abs(rank - rankDes) == Math.abs(file - fileDes) || rank - rankDes == 0 || file - fileDes == 0) {
+            int rankStep = rank == rankDes ? 0 : (rankDes - rank) / (Math.abs(rankDes - rank));
+            int fileStep = file == fileDes ? 0 : (fileDes - file) / (Math.abs(fileDes - file));
+
+            do {
+                rank = rank + rankStep;
+                file = file + fileStep;
+//                System.out.println(rank+" "+file);
+            } while ((rank != rankDes || file != fileDes) && board.getPieceAtLocation(rank, file) == null);
+
+            if (rank == rankDes && file == fileDes) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 }

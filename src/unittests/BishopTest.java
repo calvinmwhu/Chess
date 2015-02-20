@@ -1,63 +1,48 @@
-//package unittests;
-//
-//import org.bitbucket.calvinmwhu.chess.chessboard.Board;
-//import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
-//import org.bitbucket.calvinmwhu.chess.pieces.Bishop;
-//import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-//import org.bitbucket.calvinmwhu.chess.pieces.Rook;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class BishopTest {
-//
-//    @Test
-//    public void testSetHashKey() throws Exception {
-//        Piece bishop0 = new Bishop("white", 3, 3);
-//        Piece bishop1 = new Bishop("white", 3, 3);
-////        assertArrayEquals(bishop0.getHashKey().getBytes(),"Bishop_0".getBytes());
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocationEmptyBoard() throws Exception {
-//        Piece bishop = new Bishop("white",3,3);
-//        Board board = new SquareBoard();
-//
-//        assertTrue(bishop.canMoveToLocation(board, 4, 4));
-//        assertTrue(bishop.canMoveToLocation(board, 2, 2));
-//        assertTrue(bishop.canMoveToLocation(board, 4, 2));
-//        assertTrue(bishop.canMoveToLocation(board, 2, 4));
-//
-//
-//        assertTrue(bishop.canMoveToLocation(board, 5, 5));
-//        assertTrue(bishop.canMoveToLocation(board, 1, 1));
-//        assertTrue(bishop.canMoveToLocation(board, 5, 1));
-//        assertTrue(bishop.canMoveToLocation(board, 1, 5));
-//
-//        assertFalse(bishop.canMoveToLocation(board,3,0));
-//        assertFalse(bishop.canMoveToLocation(board,3,1));
-//        assertFalse(bishop.canMoveToLocation(board,4,3));
-//        assertFalse(bishop.canMoveToLocation(board,2,3));
-//
-//
-//        assertFalse(bishop.canMoveToLocation(board,5,6));
-//        assertFalse(bishop.canMoveToLocation(board,6,5));
-//        assertFalse(bishop.canMoveToLocation(board,4,5));
-//        assertFalse(bishop.canMoveToLocation(board,2,5));
-//
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocationRandomBoard() throws  Exception{
-//        Board board = new SquareBoard();
-//        Piece bishop = new Bishop("white", 3,3);
-//        board.setPiecesAtLocation(new Rook("white", 4, 4), 4, 4);
-//        board.setPiecesAtLocation(new Rook("white", 4, 2), 4, 2);
-//
-//        assertFalse(bishop.canMoveToLocation(board,5,5));
-//        assertFalse(bishop.canMoveToLocation(board,5,1));
-//
-//
-//
-//    }
-//}
+package unittests;
+
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
+import org.bitbucket.calvinmwhu.chess.game.Game;
+import org.bitbucket.calvinmwhu.chess.pieces.Bishop;
+import org.bitbucket.calvinmwhu.chess.pieces.Piece;
+import org.bitbucket.calvinmwhu.chess.pieces.Rook;
+import org.bitbucket.calvinmwhu.chess.values.BoardShape;
+import org.bitbucket.calvinmwhu.chess.values.Player;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class BishopTest {
+
+
+    @Test
+    public void testCanMoveToLocationEmptyBoard() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece blackBishop = game.getPlayers(Player.BLACK).get("Bishop0");
+        blackBishop.setTileUnderPiece(board.getTileAtLocation(2, 5));
+        blackBishop.updateReachableTiles();
+        System.out.println(blackBishop.getReachableTiles());
+    }
+
+    @Test
+    public void testCanMoveToLocationRandomBoard() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece whiteBishop = game.getPlayers(Player.WHITE).get("Bishop0");
+        Piece whitePawn0 = game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece whitePawn1 = game.getPlayers(Player.WHITE).get("Pawn1");
+        Piece blackQueen = game.getPlayers(Player.BLACK).get("Queen");
+        Piece blackKing = game.getPlayers(Player.BLACK).get("King");
+
+        whiteBishop.setTileUnderPiece(board.getTileAtLocation(1, 4));
+        whitePawn0.setTileUnderPiece(board.getTileAtLocation(3, 6));
+        whitePawn1.setTileUnderPiece(board.getTileAtLocation(3, 2));
+        blackKing.setTileUnderPiece(board.getTileAtLocation(0, 5));
+        blackQueen.setTileUnderPiece(board.getTileAtLocation(0, 3));
+        whiteBishop.updateReachableTiles();
+        System.out.println(whiteBishop.getReachableTiles());
+    }
+}

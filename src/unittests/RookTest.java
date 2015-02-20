@@ -21,7 +21,7 @@ public class RookTest {
         Piece blackRook=game.getPlayers(Player.BLACK).get("Rook1");
         blackRook.setTileUnderPiece(board.getTileAtLocation(2, 5));
         blackRook.updateReachableTiles();
-//        System.out.println(blackRook.getReachableTiles());
+        System.out.println(blackRook.getReachableTiles());
     }
 
     @Test
@@ -29,19 +29,20 @@ public class RookTest {
         Game game = new Game();
         game.initContent(BoardShape.SQUARE);
         Board board = game.getChessBoard();
-        Piece blackRook=game.getPlayers(Player.BLACK).get("Rook1");
-        Piece whitePawn1=game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece whiteRook=game.getPlayers(Player.WHITE).get("Rook1");
+        Piece whitePawn0=game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece whitePawn1=game.getPlayers(Player.WHITE).get("Pawn1");
         Piece blackQueen=game.getPlayers(Player.BLACK).get("Queen");
         Piece blackKing = game.getPlayers(Player.BLACK).get("King");
-        Piece whitePawn2=game.getPlayers(Player.WHITE).get("Pawn1");
 
 
-        blackRook.setTileUnderPiece(board.getTileAtLocation(3,3));
-        whitePawn1.setTileUnderPiece(board.getTileAtLocation(4,3));
-        whitePawn2.setTileUnderPiece(board.getTileAtLocation(1,3));
+        whiteRook.setTileUnderPiece(board.getTileAtLocation(3,3));
+        whitePawn0.setTileUnderPiece(board.getTileAtLocation(4,3));
+        whitePawn1.setTileUnderPiece(board.getTileAtLocation(1,3));
         blackKing.setTileUnderPiece(board.getTileAtLocation(3,2));
         blackQueen.setTileUnderPiece(board.getTileAtLocation(3,4));
-        System.out.println(blackRook.getReachableTiles());
+        whiteRook.updateReachableTiles();
+        System.out.println(whiteRook.getReachableTiles());
 
     }
 

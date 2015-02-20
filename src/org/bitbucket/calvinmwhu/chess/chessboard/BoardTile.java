@@ -59,9 +59,9 @@ public class BoardTile {
     @Override
     public String toString() {
         if (occupyingPiece != null)
-            return "(" + rankPos + "," + filePos + "): " + occupyingPiece.getPlayer().getColor() + occupyingPiece.getName().getName();
+            return "(" + rankPos + "," + filePos + "):" + occupyingPiece.getPlayer().getColor() + occupyingPiece.getName().getName();
         else
-            return "(" + rankPos + "," + filePos + "): EMPTY";
+            return "(" + rankPos + "," + filePos + "):EMPTY";
     }
 
 

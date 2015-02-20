@@ -5,7 +5,6 @@ import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public abstract class Piece {
     protected Board board;
@@ -40,10 +39,16 @@ public abstract class Piece {
     }
 
     public int getRank() {
+        if (tileUnderPiece == null) {
+            return -1;
+        }
         return tileUnderPiece.getRankPos();
     }
 
     public int getFile() {
+        if (tileUnderPiece == null) {
+            return -1;
+        }
         return tileUnderPiece.getFilePos();
     }
 
@@ -52,32 +57,19 @@ public abstract class Piece {
     }
 
     public void setTileUnderPiece(BoardTile tile) {
-        tileUnderPiece = tile;
+//        if (tile != tileUnderPiece) {
+        if (tileUnderPiece != null) {
+            tileUnderPiece.setOccupyingPiece(null);
+        }
+        if (tile != tileUnderPiece) {
+            tileUnderPiece = tile;
+        }
         if (tile != null) {
             tile.setOccupyingPiece(this);
         }
+//        }
     }
 
-//
-//    public LinkedList<BoardTile> getNeighbours() {
-//        LinkedList<BoardTile> neighbours = new LinkedList<BoardTile>();
-//        neighbours.add(new BoardTile(rank, file));
-//        neighbours.add(new BoardTile(rank + 1, file));
-//        neighbours.add(new BoardTile(rank - 1, file));
-//        neighbours.add(new BoardTile(rank, file + 1));
-//        neighbours.add(new BoardTile(rank, file - 1));
-//        neighbours.add(new BoardTile(rank - 1, file - 1));
-//        neighbours.add(new BoardTile(rank + 1, file - 1));
-//        neighbours.add(new BoardTile(rank - 1, file + 1));
-//        neighbours.add(new BoardTile(rank + 1, file + 1));
-//        return neighbours;
-//    }
-
-    //    @Override
-//    public String toString() {
-//        return player.getColor()+name.getName()+
-//    }
-//
     public abstract void updateReachableTiles();
 
     public void killPiece(Piece target) {
@@ -91,14 +83,23 @@ public abstract class Piece {
             if (toTile.getPlayerAtTile() != Player.UNOCCUPIED) {
                 //kill piece
                 killPiece(toTile.getOccupyingPiece());
-            }else{
-                System.out.println(player.getColor() + name.getName()+"moves to "+ toTile);
+            } else {
+                System.out.println(player.getColor() + name.getName() + "moves to " + toTile);
             }
-            tileUnderPiece.setOccupyingPiece(null);
             setTileUnderPiece(toTile);
             return true;
         }
         return false;
     }
 
+    public HashSet<BoardTile> neighbours() {
+        return null;
+    }
+
+    public boolean removedFromBoard() {
+        return tileUnderPiece == null;
+    }
+
+    public abstract boolean canKillKingAtTile(BoardTile toTile);
+//    public abstract tryMovingToPosition(int rank, int file);
 }

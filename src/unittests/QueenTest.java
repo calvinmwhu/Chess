@@ -1,70 +1,57 @@
-//package unittests;
-//
-//import org.bitbucket.calvinmwhu.chess.chessboard.Board;
-//import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
-//import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-//import org.bitbucket.calvinmwhu.chess.pieces.Queen;
-//import org.bitbucket.calvinmwhu.chess.pieces.Rook;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class QueenTest {
-//
-//    @Test
-//    public void testCanMoveToLocationEmptyBoard() throws Exception {
-//        Piece queen = new Queen("white", 3, 3);
-//        Board board = new SquareBoard();
-//
-//        assertTrue(queen.canMoveToLocation(board, 4, 4));
-//        assertTrue(queen.canMoveToLocation(board, 2, 2));
-//        assertTrue(queen.canMoveToLocation(board, 4, 2));
-//        assertTrue(queen.canMoveToLocation(board, 2, 4));
-//
-//        assertTrue(queen.canMoveToLocation(board, 3, 4));
-//        assertTrue(queen.canMoveToLocation(board, 4, 3));
-//
-//        assertTrue(queen.canMoveToLocation(board, 3, 5));
-//        assertTrue(queen.canMoveToLocation(board, 5, 3));
-//        assertTrue(queen.canMoveToLocation(board, 5, 5));
-//        assertTrue(queen.canMoveToLocation(board, 1, 1));
-//
-//        assertFalse(queen.canMoveToLocation(board, 5, 4));
-//        assertFalse(queen.canMoveToLocation(board, 4, 5));
-//        assertFalse(queen.canMoveToLocation(board, 1, 2));
-//        assertFalse(queen.canMoveToLocation(board, 2, 1));
-//    }
-//
-//    @Test
-//    public void testCanMoveToLocationFilledBoard() throws Exception {
-//        Board board = new SquareBoard();
-//        board.setupBoard();
-//        Piece queen = board.getPieceAtLocation(0, 3);
-//
-//        assertFalse(queen.canMoveToLocation(board, 2, 5));
-//        assertFalse(queen.canMoveToLocation(board, 2, 1));
-//        assertFalse(queen.canMoveToLocation(board, 0, 1));
-//        assertFalse(queen.canMoveToLocation(board, 0, 5));
-//        assertFalse(queen.canMoveToLocation(board, 2, 3));
-//
-//    }
-//
-//
-//    @Test
-//    public void testCanMoveToLocationRandomBoard() throws Exception {
-//        Board board = new SquareBoard();
-//        Piece queen = new Queen("white", 3, 3);
-//        board.setPiecesAtLocation(new Rook("white", 3, 2), 3, 2);
-//        board.setPiecesAtLocation(new Rook("white", 4, 3), 4, 3);
-//
-//        assertTrue(queen.canMoveToLocation(board, 2, 3));
-//        assertFalse(queen.canMoveToLocation(board, 5, 3));
-//        assertFalse(queen.canMoveToLocation(board, 3, 1));
-//        assertTrue(queen.canMoveToLocation(board, 5, 5));
-//        assertTrue(queen.canMoveToLocation(board, 3, 5));
-//
-//
-//    }
-//
-//
-//}
+package unittests;
+
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
+import org.bitbucket.calvinmwhu.chess.game.Game;
+import org.bitbucket.calvinmwhu.chess.pieces.Piece;
+import org.bitbucket.calvinmwhu.chess.pieces.Queen;
+import org.bitbucket.calvinmwhu.chess.pieces.Rook;
+import org.bitbucket.calvinmwhu.chess.values.BoardShape;
+import org.bitbucket.calvinmwhu.chess.values.Player;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class QueenTest {
+
+    @Test
+    public void testCanMoveToLocationEmptyBoard() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece queen=game.getPlayers(Player.BLACK).get("Queen");
+        queen.setTileUnderPiece(board.getTileAtLocation(2, 5));
+        queen.updateReachableTiles();
+        System.out.println(queen.getReachableTiles());
+    }
+
+
+    @Test
+    public void testCanMoveToLocationRandom() throws Exception {
+        Game game = new Game();
+        game.initContent(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece queen=game.getPlayers(Player.BLACK).get("Queen");
+        Piece whitePawn0=game.getPlayers(Player.WHITE).get("Pawn0");
+        Piece whitePawn1=game.getPlayers(Player.WHITE).get("Pawn1");
+        Piece blackPawn=game.getPlayers(Player.BLACK).get("Pawn0");
+        Piece blackKing = game.getPlayers(Player.BLACK).get("King");
+
+        queen.setTileUnderPiece(board.getTileAtLocation(3, 5));
+        blackPawn.setTileUnderPiece(board.getTileAtLocation(2, 4));
+        blackKing.setTileUnderPiece(board.getTileAtLocation(5,7));
+        whitePawn0.setTileUnderPiece(board.getTileAtLocation(5,5));
+        whitePawn1.setTileUnderPiece(board.getTileAtLocation(3,2));
+
+        queen.updateReachableTiles();
+        System.out.println(queen.getReachableTiles());
+
+
+
+
+    }
+
+
+
+
+}
