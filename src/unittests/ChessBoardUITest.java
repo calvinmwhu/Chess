@@ -22,12 +22,9 @@ public class ChessBoardUITest {
 
         Image blackTile = ImageIO.read(new File(System.getProperty("user.home")+"/temp/blackTile.jpeg"));
         Image whiteTile = ImageIO.read(new File(System.getProperty("user.home")+"/temp/whiteTile.jpg"));
-        ChessBoardUI chessBoardUI = new ChessBoardUI(whiteTile,blackTile,Dimension.SQUARE.getHeight(), Dimension.SQUARE.getWidth());
-        chessBoardUI.updatePiecesConfiguration(game);
+//        ChessBoardUI chessBoardUI = new ChessBoardUI(whiteTile,blackTile,Dimension.SQUARE.getHeight(), Dimension.SQUARE.getWidth());
+//        chessBoardUI.updatePiecesConfiguration(game);
 
 
-        while(true){
-
-        }
     }
 }

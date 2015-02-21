@@ -39,6 +39,9 @@ public class Game {
         chessBoard.putPiecesOnBoard(whitePlayer, blackPlayer);
     }
 
+    /**
+     * set up pieces for the squareboard
+     */
     void setUpPieces() {
         whitePlayer = new HashMap<String, Piece>();
         blackPlayer = new HashMap<String, Piece>();
@@ -77,10 +80,21 @@ public class Game {
         return chessBoard;
     }
 
+    /**
+     *
+     * @param player
+     * @return player of either white or black color
+     */
     public HashMap<String, Piece> getPlayers(Player player) {
         return player == Player.WHITE ? whitePlayer : blackPlayer;
     }
 
+    /**
+     * return a reference to a piece at location (rank,file)
+     * @param rank
+     * @param file
+     * @return
+     */
     public Piece getPieceAt(int rank, int file) {
         if (chessBoard.validRange(rank, file)) {
             return chessBoard.getTileAtLocation(rank, file).getOccupyingPiece();
@@ -93,6 +107,13 @@ public class Game {
         //highlight UI
     }
 
+    /**
+     * move the piece to tile at location (toRank, toFile)
+     * @param piece
+     * @param toRank
+     * @param toFile
+     * @return
+     */
     public boolean movePieceTo(Piece piece, int toRank, int toFile) {
         if (!piece.moveToPosition(toRank, toFile)) {
             System.out.println("Cannot move to (" + toRank + "," + toFile + ")");
@@ -101,7 +122,11 @@ public class Game {
         return true;
     }
 
-
+    /**
+     * for each enemy piece, it checks if at least one of them can kill the king
+     * @param targetKing
+     * @return true if the targetKing is in check
+     */
     public boolean checkKing(Piece targetKing) {
         HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
         BoardTile tile = targetKing.getTileUnderPiece();
@@ -114,6 +139,12 @@ public class Game {
         return false;
     }
 
+    /**
+     * helper function for checking if king is checked if it moves to targetTile
+     * @param playerPieces
+     * @param targetTile
+     * @return
+     */
     public boolean playerCanKillKingAtTile(HashMap<String, Piece> playerPieces, BoardTile targetTile) {
         for (Piece piece : playerPieces.values()) {
             if (piece.canKillKingAtTile(targetTile)) {
@@ -123,6 +154,11 @@ public class Game {
         return false;
     }
 
+    /**
+     * for a given targetKing checkMate checks if the king can be killed no matter which tile it moves to
+     * @param targetKing
+     * @return true if targetKing is checkmated
+     */
     public boolean checkMate(Piece targetKing) {
         HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
         HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
@@ -135,12 +171,18 @@ public class Game {
         return checkMatePositions.isEmpty();
     }
 
-
+    /**
+     * update the reachables tiles for every piece on the board
+     */
     public void updateConfiguration() {
         updateConfigurationForPlayer(whitePlayer);
         updateConfigurationForPlayer(blackPlayer);
     }
 
+    /**
+     * Helper function
+     * @param playerPieces
+     */
     public void updateConfigurationForPlayer(HashMap<String, Piece> playerPieces) {
         for (Piece piece : playerPieces.values()) {
             piece.updateReachableTiles();

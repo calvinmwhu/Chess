@@ -52,10 +52,18 @@ public abstract class Piece {
         return tileUnderPiece.getFilePos();
     }
 
+    /**
+     * get the tiles the piece can move to
+     * @return
+     */
     public HashSet<BoardTile> getReachableTiles() {
         return reachableTiles;
     }
 
+    /**
+     * put a piece at tile
+     * @param tile
+     */
     public void setTileUnderPiece(BoardTile tile) {
 //        if (tile != tileUnderPiece) {
         if (tileUnderPiece != null) {
@@ -70,13 +78,26 @@ public abstract class Piece {
 //        }
     }
 
+    /**
+     * run each game iteration, updating the possible tiles the piece can move to
+     */
     public abstract void updateReachableTiles();
 
+    /**
+     * replace the piece target
+     * @param target
+     */
     public void killPiece(Piece target) {
         target.setTileUnderPiece(null);
         System.out.println(target.getPlayer().getColor() + target.getName().getName() + " killed by " + player.getColor() + name.getName());
     }
 
+    /**
+     * move a piece to tile at location (rank,file)
+     * @param rank
+     * @param file
+     * @return true if the move if successful
+     */
     public boolean moveToPosition(int rank, int file) {
         BoardTile toTile = board.getTileAtLocation(rank, file);
         if (reachableTiles.contains(toTile)) {
@@ -92,14 +113,26 @@ public abstract class Piece {
         return false;
     }
 
+    /**
+     * useful for checking if the king is checkmated
+     * @return set of neighbours tiles
+     */
     public HashSet<BoardTile> neighbours() {
         return null;
     }
 
+    /**
+     * check if a piece has been killed
+     * @return true if it is killed
+     */
     public boolean removedFromBoard() {
         return tileUnderPiece == null;
     }
 
+    /**
+     * check if the piece can move to a given tile
+     * @param toTile
+     * @return true if the tile is reachable from the piece
+     */
     public abstract boolean canKillKingAtTile(BoardTile toTile);
-//    public abstract tryMovingToPosition(int rank, int file);
 }
