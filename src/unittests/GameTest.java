@@ -28,36 +28,6 @@ public class GameTest {
 //            }
 //            System.out.println();
 //        }
-        Image blackTile = ImageIO.read(new File(System.getProperty("user.home") + "/temp/blackTile.jpeg"));
-        Image whiteTile = ImageIO.read(new File(System.getProperty("user.home")+"/temp/whiteTile.jpg"));
-
-
-//        ChessBoardUI chessBoardUI = new ChessBoardUI(whiteTile,blackTile, Dimension.SQUARE.getHeight(), Dimension.SQUARE.getWidth());
-//        chessBoardUI.updatePiecesConfiguration(game);
-
-//        Thread.sleep(30000);
-//
-//
-//        currentPiece = game.getPieceAt(1, 2);
-//        game.updateConfiguration();
-//        System.out.println(currentPiece.getReachableTiles());
-//        assertTrue(currentPiece.moveToPosition(3, 2));
-//        chessBoardUI.refreshBoard(game);
-//
-//        Thread.sleep(30000);
-//        currentPiece = game.getPieceAt(6,3);
-//        game.updateConfiguration();
-//        System.out.println(currentPiece.getReachableTiles());
-//        assertTrue(currentPiece.moveToPosition(4, 3));
-//        chessBoardUI.refreshBoard(game);
-//
-//        Thread.sleep(30000);
-//        currentPiece = game.getPieceAt(3,2);
-//        game.updateConfiguration();
-//        System.out.println(currentPiece.getReachableTiles());
-//        assertTrue(currentPiece.moveToPosition(4, 3));
-//        chessBoardUI.refreshBoard(game);
-
     }
 
 

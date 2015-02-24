@@ -5,17 +5,32 @@ import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
 /**
- * Created by calvinmwhu on 2/11/15.
+ * represents a tile object on a board
  */
 public class BoardTile {
+
+    /**
+     * rank position on board
+     */
     private int rankPos;
+
+    /**
+     * file position on baord
+     */
     private int filePos;
+
+    /**
+     * a reference to a piece that occupies this tile
+     */
     private Piece occupyingPiece;
 
-    public BoardTile(int rank, int file) {
-        rankPos = rank;
-        filePos = file;
-        occupyingPiece = null;
+    private Board parentBoard;
+
+    public BoardTile(int rank, int file, Board parentBoard) {
+        setRankPos(rank);
+        setFilePos(file);
+        this.occupyingPiece = null;
+        this.parentBoard = parentBoard;
     }
 
     public int getRankPos() {

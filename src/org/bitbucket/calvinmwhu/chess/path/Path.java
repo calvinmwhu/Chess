@@ -33,7 +33,7 @@ public class Path {
      *  Given a direction defined by (rankOffSet, fileOffset), each time the location is updated to (rank+rankOffset, file+fileOffset)
      * @param rankOffset specifies how the rank changes in direction, takes values -1, 0, or 1
      * @param fileOffset specifies how the file changes in direction, takes values -1, 0, or 1
-     * @return
+     * @return a list of all the reachable tiles from a starting tile in a given direction
      */
     public ArrayList<BoardTile> getPathInDirection(int rankOffset, int fileOffset) {
         ArrayList<BoardTile> tiles = new ArrayList<BoardTile>();

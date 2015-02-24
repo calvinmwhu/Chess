@@ -27,11 +27,11 @@ public class SquareBoard extends Board {
 
     public SquareBoard() {
         this.width = WIDTH;
-        this.height = WIDTH;
+        this.height = HEIGHT;
         boardTiles = new BoardTile[this.height][this.width];
         for (int rank = 0; rank < height; rank++) {
             for (int file = 0; file < width; file++) {
-                boardTiles[rank][file] = new BoardTile(rank, file);
+                boardTiles[rank][file] = new BoardTile(rank, file,this);
             }
         }
     }
