@@ -1,4 +1,4 @@
-package org.bitbucket.calvinmwhu.chess.View;
+package org.bitbucket.calvinmwhu.chess.view;
 
 import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Created by calvinmwhu on 2/20/15.
  */
-public class ChessBoardUI extends JFrame {
+public class ChessBoardView extends JFrame {
     private final int height;
     private final int width;
     private JPanel centerPanel;
@@ -24,7 +24,6 @@ public class ChessBoardUI extends JFrame {
 
     private JLabel[][] centerlabels;
     private ImagePanel[][] imagePanels;
-//    private Game game;
 
     class ImagePanel extends JPanel {
         private Image image;
@@ -39,7 +38,7 @@ public class ChessBoardUI extends JFrame {
         }
     }
 
-    public ChessBoardUI(Image whiteTile, Image blackTile, int height, int width) {
+    public ChessBoardView(Image whiteTile, Image blackTile, int height, int width) {
         this.whiteTile = whiteTile;
         this.blackTile = blackTile;
         this.height = height;
@@ -56,7 +55,6 @@ public class ChessBoardUI extends JFrame {
 
     private void setUpChessBoardUI() {
         setTitle("CS242 Chess Game");
-//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         constructContentPane(getContentPane());

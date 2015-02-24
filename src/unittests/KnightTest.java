@@ -2,13 +2,10 @@ package unittests;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.game.Game;
-import org.bitbucket.calvinmwhu.chess.pieces.Knight;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class KnightTest {
 

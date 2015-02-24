@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * Created by calvinmwhu on 2/18/15.
+ * Game backend model, for storing chessBoard, pieces, and players data.
  */
 public class Game {
     private Board chessBoard;
@@ -21,10 +21,18 @@ public class Game {
     private HashMap<String, Piece> blackPlayer;
     private Player turn;
 
+    /**
+     * constructor, creates an empty game
+     */
     public Game() {
         turn = Player.WHITE;
     }
 
+    /**
+     * sets up a chessboard and pieces according the specified shape. But not connecting pieces to chessboard
+     *
+     * @param shape
+     */
     public void initContent(BoardShape shape) {
         if (shape == BoardShape.SQUARE) {
             chessBoard = new SquareBoard();
@@ -34,13 +42,18 @@ public class Game {
         setUpPieces();
     }
 
+    /**
+     * sets up pieces and the chessboard, then puts pieces on board
+     *
+     * @param shape
+     */
     public void setUpBoardAndPieces(BoardShape shape) {
         initContent(shape);
         chessBoard.putPiecesOnBoard(whitePlayer, blackPlayer);
     }
 
     /**
-     * set up pieces for the squareboard
+     * creates 16 normal pieces and stored them into the hashmaps
      */
     void setUpPieces() {
         whitePlayer = new HashMap<String, Piece>();
@@ -76,12 +89,16 @@ public class Game {
         }
     }
 
+    /**
+     * return the game's chessBoard
+     *
+     * @return a reference to a ChessBoard object
+     */
     public Board getChessBoard() {
         return chessBoard;
     }
 
     /**
-     *
      * @param player
      * @return player of either white or black color
      */
@@ -90,10 +107,11 @@ public class Game {
     }
 
     /**
-     * return a reference to a piece at location (rank,file)
+     * return the piece at location (rank,file), null if no piece exists at that location
+     *
      * @param rank
      * @param file
-     * @return
+     * @return a reference to the piece
      */
     public Piece getPieceAt(int rank, int file) {
         if (chessBoard.validRange(rank, file)) {
@@ -102,17 +120,14 @@ public class Game {
         return null;
     }
 
-    public void readyToMove(Piece piece) {
-//        piece.updateReachableTiles();
-        //highlight UI
-    }
 
     /**
      * move the piece to tile at location (toRank, toFile)
+     *
      * @param piece
      * @param toRank
      * @param toFile
-     * @return
+     * @return true if the move is allowed (legal move), false otherwise
      */
     public boolean movePieceTo(Piece piece, int toRank, int toFile) {
         if (!piece.moveToPosition(toRank, toFile)) {
@@ -124,6 +139,7 @@ public class Game {
 
     /**
      * for each enemy piece, it checks if at least one of them can kill the king
+     *
      * @param targetKing
      * @return true if the targetKing is in check
      */
@@ -141,9 +157,10 @@ public class Game {
 
     /**
      * helper function for checking if king is checked if it moves to targetTile
+     *
      * @param playerPieces
      * @param targetTile
-     * @return
+     * @return true if the king can be checked at the given tile
      */
     public boolean playerCanKillKingAtTile(HashMap<String, Piece> playerPieces, BoardTile targetTile) {
         for (Piece piece : playerPieces.values()) {
@@ -156,13 +173,14 @@ public class Game {
 
     /**
      * for a given targetKing checkMate checks if the king can be killed no matter which tile it moves to
+     *
      * @param targetKing
      * @return true if targetKing is checkmated
      */
     public boolean checkMate(Piece targetKing) {
         HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
         HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
-        for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext();) {
+        for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext(); ) {
             BoardTile tile = it.next();
             if (playerCanKillKingAtTile(attackerPieces, tile)) {
                 it.remove();
@@ -181,6 +199,7 @@ public class Game {
 
     /**
      * Helper function
+     *
      * @param playerPieces
      */
     public void updateConfigurationForPlayer(HashMap<String, Piece> playerPieces) {
@@ -188,6 +207,5 @@ public class Game {
             piece.updateReachableTiles();
         }
     }
-
-
+    
 }

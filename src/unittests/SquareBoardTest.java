@@ -1,9 +1,7 @@
 package unittests;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
-import org.bitbucket.calvinmwhu.chess.chessboard.SquareBoard;
 import org.bitbucket.calvinmwhu.chess.game.Game;
-import org.bitbucket.calvinmwhu.chess.pieces.Queen;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
 import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;

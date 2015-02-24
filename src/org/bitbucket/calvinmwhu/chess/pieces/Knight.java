@@ -5,8 +5,6 @@ import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
-import java.util.Map;
-
 /**
  * Created by calvinmwhu on 2/11/15.
  */

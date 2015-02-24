@@ -11,8 +11,6 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
-import static org.junit.Assert.*;
-
 public class EmpressTest {
     @Test
     public void testMoveToLocationBarrier() throws Exception {

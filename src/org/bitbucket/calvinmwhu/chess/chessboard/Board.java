@@ -1,7 +1,6 @@
 package org.bitbucket.calvinmwhu.chess.chessboard;
 
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-import org.bitbucket.calvinmwhu.chess.values.Player;
 
 import java.util.*;
 

@@ -6,7 +6,6 @@ import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 
 
 /**

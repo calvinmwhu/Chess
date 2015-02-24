@@ -1,15 +1,15 @@
 package unittests;
 
-import org.bitbucket.calvinmwhu.chess.View.ChessBoardUI;
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-import org.bitbucket.calvinmwhu.chess.values.*;
+import org.bitbucket.calvinmwhu.chess.values.BoardShape;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
+import org.bitbucket.calvinmwhu.chess.values.Player;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.Dimension;
 import java.io.File;
 
 import static org.junit.Assert.*;
@@ -32,7 +32,7 @@ public class GameTest {
         Image whiteTile = ImageIO.read(new File(System.getProperty("user.home")+"/temp/whiteTile.jpg"));
 
 
-//        ChessBoardUI chessBoardUI = new ChessBoardUI(whiteTile,blackTile, org.bitbucket.calvinmwhu.chess.values.Dimension.SQUARE.getHeight(), org.bitbucket.calvinmwhu.chess.values.Dimension.SQUARE.getWidth());
+//        ChessBoardUI chessBoardUI = new ChessBoardUI(whiteTile,blackTile, Dimension.SQUARE.getHeight(), Dimension.SQUARE.getWidth());
 //        chessBoardUI.updatePiecesConfiguration(game);
 
 //        Thread.sleep(30000);

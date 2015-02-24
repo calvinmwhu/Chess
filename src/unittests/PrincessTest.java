@@ -3,7 +3,6 @@ package unittests;
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.game.Game;
-import org.bitbucket.calvinmwhu.chess.pieces.Empress;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
 import org.bitbucket.calvinmwhu.chess.pieces.Princess;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
