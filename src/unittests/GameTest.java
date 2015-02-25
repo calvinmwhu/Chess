@@ -24,10 +24,11 @@ public class GameTest {
         Piece currentPiece;
 //        for(int i=board.getHeight()-1; i>=0; i--){
 //            for(int j=0; j<board.getWidth(); j++){
-//                System.out.print(board.getTileAtLocation(i,j)+" ");
+//                System.out.print(board.getPieceAtLocation(i,j)+" ");
 //            }
 //            System.out.println();
 //        }
+        game.printConfiguration();
     }
 
 
@@ -47,7 +48,7 @@ public class GameTest {
         blackPawn.setTileUnderPiece(board.getTileAtLocation(4,4));
         game.updateConfiguration();
 
-        assertTrue(game.checkKing(king));
+        assertTrue(game.checkKing(Player.WHITE));
 
     }
 
@@ -66,7 +67,7 @@ public class GameTest {
         whitePawn.setTileUnderPiece(board.getTileAtLocation(2, 1));
         game.updateConfiguration();
 
-        assertTrue(game.checkKing(king));
+        assertTrue(game.checkKing(Player.BLACK));
 
     }
 
@@ -85,7 +86,7 @@ public class GameTest {
         whitePawn.setTileUnderPiece(board.getTileAtLocation(2,1));
         game.updateConfiguration();
 
-        assertFalse(game.checkKing(king));
+        assertFalse(game.checkKing(Player.BLACK));
 
     }
 
@@ -111,7 +112,7 @@ public class GameTest {
 
         game.updateConfiguration();
 
-        assertTrue(game.checkMate(king));
+        assertTrue(game.checkMate(Player.BLACK));
 
     }
 
@@ -136,10 +137,94 @@ public class GameTest {
 
         game.updateConfiguration();
 
-        assertFalse(game.checkMate(king));
+        assertFalse(game.checkMate(Player.BLACK));
 
     }
 
+    @Test
+    public void testBattle() throws  Exception{
+        Game game = new Game();
+        game.setUpBoardAndPieces(BoardShape.SQUARE);
+        Board board = game.getChessBoard();
+        Piece active;
+        game.printConfiguration();
+        System.out.println();
+        game.updateConfiguration();
 
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertTrue(game.actionMoveTo(active, 3, 2));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Pawn1");
+        assertTrue(game.actionMoveTo(active, 4, 1));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertNotNull(game.actionKillPieceAtLocation(active, 4, 1));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Pawn0");
+        assertFalse(game.actionMoveTo(active, 5, 1));
+        assertTrue(game.actionMoveTo(active, 5, 0));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 5, 1));
+        assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 2, 3));
+        assertTrue(game.actionMoveTo(active, 2, 2));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 2, 2));
+        assertTrue(game.actionMoveTo(active, 3, 1));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.WHITE));
+
+
+        active = game.getPlayers(Player.WHITE).get("Pawn0");
+        assertTrue(game.actionMoveTo(active,2,0));
+        assertFalse(game.checkKing(Player.BLACK));
+        game.updateConfiguration();
+
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertNotNull(game.actionMoveTo(active, 1, 2));
+        game.updateConfiguration();
+        assertTrue(game.checkKing(Player.WHITE));
+
+
+        active = game.getPlayers(Player.WHITE).get("Queen");
+        assertNotNull(game.actionKillPieceAtLocation(active, 1, 2));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+
+        active = game.getPlayers(Player.BLACK).get("Rook0");
+        assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn1");
+        assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
+        game.updateConfiguration();
+        assertFalse(game.checkKing(Player.BLACK));
+
+    }
 
 }

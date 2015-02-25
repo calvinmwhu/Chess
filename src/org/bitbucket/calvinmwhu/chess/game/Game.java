@@ -106,19 +106,6 @@ public class Game {
         return player == Player.WHITE ? whitePlayer : blackPlayer;
     }
 
-    /**
-     * return the piece at location (rank,file), null if no piece exists at that location
-     *
-     * @param rank
-     * @param file
-     * @return a reference to the piece
-     */
-    public Piece getPieceAt(int rank, int file) {
-        if (chessBoard.validRange(rank, file)) {
-            return chessBoard.getTileAtLocation(rank, file).getOccupyingPiece();
-        }
-        return null;
-    }
 
 
     /**
@@ -137,18 +124,48 @@ public class Game {
         return true;
     }
 
+
+
+    public boolean actionMoveTo(Piece activePiece, int toRank, int toFile){
+        BoardTile toTile = chessBoard.getTileAtLocation(toRank,toFile);
+        if(activePiece.moveToTile(toTile)){
+            printConfiguration();
+
+            return true;
+        }
+        printConfiguration();
+
+        return false;
+    }
+
+    public Piece actionKillPieceAtLocation(Piece activePiece, int toRank, int toFile){
+        Piece target = chessBoard.getPieceAtLocation(toRank,toFile);
+        if(activePiece.killTargetPiece(target)){
+            printConfiguration();
+            return target;
+        }
+
+        printConfiguration();
+        return null;
+    }
+
+
+
+
     /**
-     * for each enemy piece, it checks if at least one of them can kill the king
+     * for each enemy piece, it checks if at least one of them can kill the target player's king
      *
-     * @param targetKing
+     * @param player
      * @return true if the targetKing is in check
      */
-    public boolean checkKing(Piece targetKing) {
-        HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
+    public boolean checkKing(Player player) {
+        HashMap<String, Piece> attackerPieces = (player == Player.WHITE) ? blackPlayer : whitePlayer;
+        HashMap<String, Piece> targetPieces = (player == Player.BLACK) ? blackPlayer : whitePlayer;
+        Piece targetKing = targetPieces.get(PieceName.KING.getName());
         BoardTile tile = targetKing.getTileUnderPiece();
         for (Piece piece : attackerPieces.values()) {
 //            System.out.println(piece.getPlayer().getColor() + piece.getName().getName() + " can move to " + piece.getReachableTiles());
-            if (piece.getReachableTiles().contains(tile)) {
+            if (!piece.removedFromBoard() && piece.getReachableTiles().contains(tile)) {
                 return true;
             }
         }
@@ -172,13 +189,15 @@ public class Game {
     }
 
     /**
-     * for a given targetKing checkMate checks if the king can be killed no matter which tile it moves to
+     * for a given player checkMate checks if its king can be killed no matter which tile it moves to
      *
-     * @param targetKing
+     * @param player
      * @return true if targetKing is checkmated
      */
-    public boolean checkMate(Piece targetKing) {
-        HashMap<String, Piece> attackerPieces = (targetKing.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
+    public boolean checkMate(Player player) {
+        HashMap<String, Piece> attackerPieces = (player == Player.WHITE) ? blackPlayer : whitePlayer;
+        HashMap<String, Piece> targetPieces = (player == Player.BLACK) ? blackPlayer : whitePlayer;
+        Piece targetKing = targetPieces.get(PieceName.KING.getName());
         HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
         for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext(); ) {
             BoardTile tile = it.next();
@@ -206,6 +225,16 @@ public class Game {
         for (Piece piece : playerPieces.values()) {
             piece.updateReachableTiles();
         }
+    }
+
+    public void printConfiguration() {
+        for (int i = chessBoard.getHeight() - 1; i >= 0; i--) {
+            for (int j = 0; j < chessBoard.getWidth(); j++) {
+                System.out.print(chessBoard.getPieceAtLocation(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
 }

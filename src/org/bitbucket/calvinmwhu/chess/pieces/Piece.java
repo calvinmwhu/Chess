@@ -38,16 +38,16 @@ public abstract class Piece {
         return tileUnderPiece;
     }
 
-    public boolean isFriendPiece(Piece piece){
-        if(piece!=null){
-            return piece.getPlayer()==player;
+    public boolean isFriendPiece(Piece piece) {
+        if (piece != null) {
+            return piece.getPlayer() == player;
         }
         return false;
     }
 
-    public BoardTile getTileAtLocation(int rank, int file){
-        if(board!=null){
-            return board.getTileAtLocation(rank,file);
+    public BoardTile getTileAtLocation(int rank, int file) {
+        if (board != null) {
+            return board.getTileAtLocation(rank, file);
         }
         return null;
     }
@@ -68,6 +68,7 @@ public abstract class Piece {
 
     /**
      * get the tiles the piece can move to
+     *
      * @return
      */
     public HashSet<BoardTile> getReachableTiles() {
@@ -76,6 +77,7 @@ public abstract class Piece {
 
     /**
      * puts a piece at tile; also calls tile's setOccupyingPiece function to connect the tile to piece
+     *
      * @param tile
      */
     public void setTileUnderPiece(BoardTile tile) {
@@ -98,6 +100,7 @@ public abstract class Piece {
 
     /**
      * replace the piece target
+     *
      * @param target
      */
     public void killPiece(Piece target) {
@@ -107,12 +110,13 @@ public abstract class Piece {
 
     /**
      * move a piece to tile at location (rank,file)
+     *
      * @param rank
      * @param file
      * @return true if the move if successful
      */
     public boolean moveToPosition(int rank, int file) {
-        BoardTile toTile = getTileAtLocation(rank,file);
+        BoardTile toTile = getTileAtLocation(rank, file);
         if (reachableTiles.contains(toTile)) {
             if (toTile.getPlayerAtTile() != Player.UNOCCUPIED) {
                 //kill piece
@@ -127,52 +131,52 @@ public abstract class Piece {
     }
 
 
-
-
-
-
-
-
-
-
-
     /**
      * called by a game object on a piece trying to move to a BoardTile toTile
+     *
      * @param toTile a BoardTile object that the current piece tries to move to
      * @return true if the move if valid, false otherwise
      */
-    public boolean moveToTile(BoardTile toTile){
-        if(toTile==null || toTile.getOccupyingPiece()!=null){
+    public boolean moveToTile(BoardTile toTile) {
+        if (toTile == null || toTile.getOccupyingPiece() != null) {
             return false;
         }
-        setTileUnderPiece(toTile);
-        return true;
+        if (reachableTiles.contains(toTile)) {
+            setTileUnderPiece(toTile);
+            return true;
+        }
+        return false;
     }
 
     /**
      * called by a game object on an attacking piece that tries to kill another piece target
+     *
      * @param target a piece object that the current piece tries to kill
      * @return true if the target is successfully killed, false otherwise
      */
-    public boolean killTargetPiece(Piece target){
+    public boolean killTargetPiece(Piece target) {
         /**
          * checks if the target is invalid, i.e. a null or a friend
          */
-        if(target==null || isFriendPiece(target)){
+        if (target == null || isFriendPiece(target)) {
             return false;
         }
         /**
          * update the tile
          */
         BoardTile toTile = target.getTileUnderPiece();
-        target.setTileUnderPiece(null);
-        setTileUnderPiece(toTile);
-        return true;
+        if (reachableTiles.contains(toTile)) {
+            target.setTileUnderPiece(null);
+            setTileUnderPiece(toTile);
+            return true;
+        }
+        return false;
     }
 
 
     /**
      * useful for checking if the king is checkmated. returns all the neighbour tiles around the king
+     *
      * @return set of neighbours tiles
      */
     public HashSet<BoardTile> neighbours() {
@@ -181,6 +185,7 @@ public abstract class Piece {
 
     /**
      * check if a piece has been killed
+     *
      * @return true if it is killed
      */
     public boolean removedFromBoard() {
@@ -189,6 +194,7 @@ public abstract class Piece {
 
     /**
      * check if the piece can move to a given tile
+     *
      * @param toTile
      * @return true if the toTile is reachable by the piece
      */
@@ -197,7 +203,7 @@ public abstract class Piece {
 
     @Override
     public String toString() {
-        return getPlayer().getColor()+getName()+getIndex();
+        return getPlayer().getColor() + getName().getName() + getIndex();
     }
 
 }
