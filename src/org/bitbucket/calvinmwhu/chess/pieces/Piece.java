@@ -98,38 +98,6 @@ public abstract class Piece {
     public abstract void updateReachableTiles();
 
 
-    /**
-     * replace the piece target
-     *
-     * @param target
-     */
-    public void killPiece(Piece target) {
-        target.setTileUnderPiece(null);
-        System.out.println(target.getPlayer().getColor() + target.getName().getName() + " killed by " + player.getColor() + name.getName());
-    }
-
-    /**
-     * move a piece to tile at location (rank,file)
-     *
-     * @param rank
-     * @param file
-     * @return true if the move if successful
-     */
-    public boolean moveToPosition(int rank, int file) {
-        BoardTile toTile = getTileAtLocation(rank, file);
-        if (reachableTiles.contains(toTile)) {
-            if (toTile.getPlayerAtTile() != Player.UNOCCUPIED) {
-                //kill piece
-                killPiece(toTile.getOccupyingPiece());
-            } else {
-                System.out.println(player.getColor() + name.getName() + "moves to " + toTile);
-            }
-            setTileUnderPiece(toTile);
-            return true;
-        }
-        return false;
-    }
-
 
     /**
      * called by a game object on a piece trying to move to a BoardTile toTile

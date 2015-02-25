@@ -108,24 +108,6 @@ public class Game {
 
 
 
-    /**
-     * move the piece to tile at location (toRank, toFile)
-     *
-     * @param piece
-     * @param toRank
-     * @param toFile
-     * @return true if the move is allowed (legal move), false otherwise
-     */
-    public boolean movePieceTo(Piece piece, int toRank, int toFile) {
-        if (!piece.moveToPosition(toRank, toFile)) {
-            System.out.println("Cannot move to (" + toRank + "," + toFile + ")");
-            return false;
-        }
-        return true;
-    }
-
-
-
     public boolean actionMoveTo(Piece activePiece, int toRank, int toFile){
         BoardTile toTile = chessBoard.getTileAtLocation(toRank,toFile);
         if(activePiece.moveToTile(toTile)){
