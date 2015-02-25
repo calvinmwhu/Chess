@@ -15,7 +15,7 @@ public class BoardTile {
     private int rankPos;
 
     /**
-     * file position on baord
+     * file position on board
      */
     private int filePos;
 
@@ -24,12 +24,23 @@ public class BoardTile {
      */
     private Piece occupyingPiece;
 
+
+    /**
+     * reference to the chess board that holds this tile
+     */
     private Board parentBoard;
 
+    /**
+     * Constructor
+     *
+     * @param rank
+     * @param file
+     * @param parentBoard
+     */
     public BoardTile(int rank, int file, Board parentBoard) {
         setRankPos(rank);
         setFilePos(file);
-        this.occupyingPiece = null;
+        setOccupyingPiece(null);
         this.parentBoard = parentBoard;
     }
 
@@ -41,6 +52,10 @@ public class BoardTile {
         return filePos;
     }
 
+    public Piece getOccupyingPiece() {
+        return occupyingPiece;
+    }
+
     public void setRankPos(int rank) {
         rankPos = rank;
     }
@@ -49,12 +64,13 @@ public class BoardTile {
         filePos = file;
     }
 
-    public Piece getOccupyingPiece() {
-        return occupyingPiece;
-    }
 
     public void setOccupyingPiece(Piece piece) {
         occupyingPiece = piece;
+    }
+
+    public Board getBoard() {
+        return parentBoard;
     }
 
     public Player getPlayerAtTile() {
@@ -64,7 +80,7 @@ public class BoardTile {
         return Player.UNOCCUPIED;
     }
 
-    public PieceName getPieceNameAtTile(){
+    public PieceName getPieceNameAtTile() {
         if (occupyingPiece != null) {
             return occupyingPiece.getName();
         }

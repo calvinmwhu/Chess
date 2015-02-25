@@ -18,6 +18,10 @@ public class Empress extends Piece {
         this.name = PieceName.EMPRESS;
     }
 
+    public String getIndex(){
+        return String.valueOf(index);
+    }
+
     public void updateReachableTiles() {
         if (removedFromBoard()) return;
         reachableTiles.clear();

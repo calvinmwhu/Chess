@@ -22,7 +22,7 @@ public class Game {
     private Player turn;
 
     /**
-     * constructor, creates an empty game
+     * constructor, creates an empty game, gives the turn to white player
      */
     public Game() {
         turn = Player.WHITE;
@@ -53,7 +53,7 @@ public class Game {
     }
 
     /**
-     * creates 16 normal pieces and stored them into the hashmaps
+     * creates 16 normal pieces and stores them into the player hashmaps
      */
     void setUpPieces() {
         whitePlayer = new HashMap<String, Piece>();
@@ -207,5 +207,5 @@ public class Game {
             piece.updateReachableTiles();
         }
     }
-    
+
 }

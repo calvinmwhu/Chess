@@ -18,6 +18,10 @@ public class Rook extends Piece {
         this.name = PieceName.ROOK;
     }
 
+    public String getIndex() {
+        return String.valueOf(index);
+    }
+
     public void updateReachableTiles() {
         if (removedFromBoard()) return;
         reachableTiles.clear();
@@ -32,7 +36,7 @@ public class Rook extends Piece {
     }
 
     public boolean canKillKingAtTile(BoardTile toTile) {
-        if (removedFromBoard() || toTile==tileUnderPiece) return false;
+        if (removedFromBoard() || toTile == tileUnderPiece) return false;
         int rank = getRank();
         int file = getFile();
         int rankDes = toTile.getRankPos();

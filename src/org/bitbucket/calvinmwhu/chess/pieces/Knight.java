@@ -15,6 +15,10 @@ public class Knight extends Piece {
         this.name = PieceName.KNIGHT;
     }
 
+    public String getIndex(){
+        return String.valueOf(index);
+    }
+
     public void updateReachableTiles() {
         if (removedFromBoard()) return;
         reachableTiles.clear();
