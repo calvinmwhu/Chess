@@ -107,10 +107,9 @@ public class Game {
     }
 
 
-
-    public boolean actionMoveTo(Piece activePiece, int toRank, int toFile){
-        BoardTile toTile = chessBoard.getTileAtLocation(toRank,toFile);
-        if(activePiece.moveToTile(toTile)){
+    public boolean actionMoveTo(Piece activePiece, int toRank, int toFile) {
+        BoardTile toTile = chessBoard.getTileAtLocation(toRank, toFile);
+        if (activePiece.moveToTile(toTile)) {
             printConfiguration();
 
             return true;
@@ -120,9 +119,9 @@ public class Game {
         return false;
     }
 
-    public Piece actionKillPieceAtLocation(Piece activePiece, int toRank, int toFile){
-        Piece target = chessBoard.getPieceAtLocation(toRank,toFile);
-        if(activePiece.killTargetPiece(target)){
+    public Piece actionKillPieceAtLocation(Piece activePiece, int toRank, int toFile) {
+        Piece target = chessBoard.getPieceAtLocation(toRank, toFile);
+        if (activePiece.killTargetPiece(target)) {
             printConfiguration();
             return target;
         }
@@ -130,8 +129,6 @@ public class Game {
         printConfiguration();
         return null;
     }
-
-
 
 
     /**
@@ -155,7 +152,7 @@ public class Game {
     }
 
     /**
-     * helper function for checking if king is checked if it moves to targetTile
+     * helper function for checking if king is checkable if it moves to targetTile
      *
      * @param playerPieces
      * @param targetTile
@@ -191,11 +188,11 @@ public class Game {
     }
 
     /**
-     * update the reachables tiles for every piece on the board
+     * update the reachable tiles of every piece on the board
      */
-    public void updateConfiguration() {
-        updateConfigurationForPlayer(whitePlayer);
-        updateConfigurationForPlayer(blackPlayer);
+    public void updateReachableTilesForAll() {
+        updateReachableTilesForPlayer(whitePlayer);
+        updateReachableTilesForPlayer(blackPlayer);
     }
 
     /**
@@ -203,7 +200,7 @@ public class Game {
      *
      * @param playerPieces
      */
-    public void updateConfigurationForPlayer(HashMap<String, Piece> playerPieces) {
+    public void updateReachableTilesForPlayer(HashMap<String, Piece> playerPieces) {
         for (Piece piece : playerPieces.values()) {
             piece.updateReachableTiles();
         }

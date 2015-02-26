@@ -36,7 +36,7 @@ public class GameTest {
         king.setTileUnderPiece(board.getTileAtLocation(3, 3));
         blackQueen.setTileUnderPiece(board.getTileAtLocation(2, 1));
         blackPawn.setTileUnderPiece(board.getTileAtLocation(4, 4));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
         assertTrue(game.checkKing(Player.WHITE));
 
@@ -55,7 +55,7 @@ public class GameTest {
         king.setTileUnderPiece(board.getTileAtLocation(3, 0));
         whiteRook.setTileUnderPiece(board.getTileAtLocation(4, 1));
         whitePawn.setTileUnderPiece(board.getTileAtLocation(2, 1));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
         assertTrue(game.checkKing(Player.BLACK));
 
@@ -74,7 +74,7 @@ public class GameTest {
         king.setTileUnderPiece(board.getTileAtLocation(6, 3));
         whiteRook.setTileUnderPiece(board.getTileAtLocation(5, 4));
         whitePawn.setTileUnderPiece(board.getTileAtLocation(2, 1));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
         assertFalse(game.checkKing(Player.BLACK));
 
@@ -100,7 +100,7 @@ public class GameTest {
         whiteKnight1.setTileUnderPiece(board.getTileAtLocation(4, 1));
         whiteQueen.setTileUnderPiece(board.getTileAtLocation(6, 4));
 
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
         assertTrue(game.checkMate(Player.BLACK));
 
@@ -125,7 +125,7 @@ public class GameTest {
         whiteKnight1.setTileUnderPiece(board.getTileAtLocation(4, 1));
         whiteQueen.setTileUnderPiece(board.getTileAtLocation(6, 4));
 
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
         assertFalse(game.checkMate(Player.BLACK));
 
@@ -139,112 +139,112 @@ public class GameTest {
         Piece active;
         game.printConfiguration();
         System.out.println();
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertTrue(game.actionMoveTo(active, 3, 2));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Pawn1");
         assertTrue(game.actionMoveTo(active, 4, 1));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertNotNull(game.actionKillPieceAtLocation(active, 4, 1));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Pawn0");
         assertFalse(game.actionMoveTo(active, 5, 1));
         assertTrue(game.actionMoveTo(active, 5, 0));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertFalse(game.actionMoveTo(active, 5, 1));
         assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Knight0");
         assertFalse(game.actionMoveTo(active, 2, 3));
         assertTrue(game.actionMoveTo(active, 2, 2));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertFalse(game.actionMoveTo(active, 2, 2));
         assertTrue(game.actionMoveTo(active, 3, 1));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn0");
         assertTrue(game.actionMoveTo(active, 2, 0));
         assertFalse(game.checkKing(Player.BLACK));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertNotNull(game.actionMoveTo(active, 1, 2));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertTrue(game.checkKing(Player.WHITE));
 
 
         active = game.getPlayers(Player.WHITE).get("Queen");
         assertNotNull(game.actionKillPieceAtLocation(active, 1, 2));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
 
         active = game.getPlayers(Player.BLACK).get("Rook0");
         assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Pawn1");
         assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
 
         active = game.getPlayers(Player.BLACK).get("Pawn4");
         assertFalse(game.actionMoveTo(active, 3, 4));
         assertTrue(game.actionMoveTo(active, 4, 4));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn4");
         assertTrue(game.actionMoveTo(active, 3, 4));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
 
         active = game.getPlayers(Player.BLACK).get("Queen");
         assertFalse(game.actionMoveTo(active, 5, 2));
         assertTrue(game.actionMoveTo(active, 3, 7));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn5");
         assertTrue(game.actionMoveTo(active, 3, 5));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
 
 
         active = game.getPlayers(Player.BLACK).get("Queen");
         assertNotNull(game.actionKillPieceAtLocation(active, 0, 4));
-        game.updateConfiguration();
+        game.updateReachableTilesForAll();
 //        assertFalse(game.checkKing(Player.WHITE));
     }
 
