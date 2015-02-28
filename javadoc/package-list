@@ -1,0 +1,8 @@
+org.bitbucket.calvinmwhu.chess.chessboard
+org.bitbucket.calvinmwhu.chess.controller
+org.bitbucket.calvinmwhu.chess.game
+org.bitbucket.calvinmwhu.chess.path
+org.bitbucket.calvinmwhu.chess.pieces
+org.bitbucket.calvinmwhu.chess.values
+org.bitbucket.calvinmwhu.chess.view
+unittests
