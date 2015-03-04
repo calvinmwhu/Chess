@@ -78,11 +78,5 @@ public class ChessBoardController extends JApplet {
         }
     }
 
-    public static void main(String[] args) {
-//        ChessBoardView view = new ChessBoardView();
-        ChessBoardController controller = new ChessBoardController();
-//        controller.init();
-//        controller.startChessGame();
-    }
 
 }
