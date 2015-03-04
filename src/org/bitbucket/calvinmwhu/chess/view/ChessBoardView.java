@@ -17,7 +17,7 @@ import java.util.HashMap;
 /**
  * Created by calvinmwhu on 2/20/15.
  */
-public class ChessBoardView extends JFrame{
+public class ChessBoardView extends JPanel{
     private final int height;
     private final int width;
     private TextField[] scores;
@@ -73,7 +73,7 @@ public class ChessBoardView extends JFrame{
         redo.addActionListener(a);
     }
 
-    public ChessBoardView(int height, int width) throws Exception{
+    public ChessBoardView(ChessBoardController controller, int height, int width) throws Exception{
         this.height = height;
         this.width = width;
         this.scores = new TextField[2];
@@ -85,7 +85,7 @@ public class ChessBoardView extends JFrame{
         centerlabels = new JLabel[this.height][this.width];
         imagePanels = new ImagePanel[this.height][this.width];
         loadPieceImages();
-        setUpChessBoardUI();
+        setUpChessBoardUI(controller);
     }
 
     private void loadPieceImages() throws Exception{
@@ -103,14 +103,17 @@ public class ChessBoardView extends JFrame{
         blackTile = ImageIO.read(this.getClass().getResource("blackTile.jpeg"));
     }
 
-    private void setUpChessBoardUI() {
-        setTitle("CS242 Chess Game");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setSize(800, 800);
-        setLocationRelativeTo(null);
-        constructContentPane(getContentPane());
-        setVisible(true);
+    private void setUpChessBoardUI(ChessBoardController controller) {
+//        setTitle("CS242 Chess Game");
+//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        setLayout(new BorderLayout());
+//        setSize(800, 800);
+//        setLocationRelativeTo(null);
+//        constructContentPane(getContentPane());
+//        setVisible(true);
+
+        constructContentPane(controller.getContentPane());
+
     }
 
 //
