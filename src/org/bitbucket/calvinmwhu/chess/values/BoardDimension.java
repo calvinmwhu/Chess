@@ -3,13 +3,13 @@ package org.bitbucket.calvinmwhu.chess.values;
 /**
  * Created by calvinmwhu on 2/20/15.
  */
-public enum Dimension {
+public enum BoardDimension {
     SQUARE(8,8);
 
     private final int height;
     private final int width;
 
-    Dimension(int height, int width){
+    BoardDimension(int height, int width){
         this.height = height;
         this.width = width;
     }

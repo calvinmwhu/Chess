@@ -1,13 +1,18 @@
 package unittests;
 
 import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.controller.ChessBoardController;
 import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
-import org.bitbucket.calvinmwhu.chess.values.BoardShape;
-import org.bitbucket.calvinmwhu.chess.values.PieceName;
-import org.bitbucket.calvinmwhu.chess.values.Player;
+import org.bitbucket.calvinmwhu.chess.values.*;
+import org.bitbucket.calvinmwhu.chess.view.ChessBoardView;
 import org.junit.Test;
 
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.Dimension;
+import java.io.File;
 
 import static org.junit.Assert.*;
 
@@ -145,45 +150,53 @@ public class GameTest {
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertTrue(game.actionMoveTo(active, 3, 2));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Pawn1");
         assertTrue(game.actionMoveTo(active, 4, 1));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertNotNull(game.actionKillPieceAtLocation(active, 4, 1));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Pawn0");
         assertFalse(game.actionMoveTo(active, 5, 1));
         assertTrue(game.actionMoveTo(active, 5, 0));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Pawn2");
         assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertFalse(game.actionMoveTo(active, 5, 1));
         assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.WHITE));
 
         active = game.getPlayers(Player.WHITE).get("Knight0");
         assertFalse(game.actionMoveTo(active, 2, 3));
         assertTrue(game.actionMoveTo(active, 2, 2));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.BLACK));
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertFalse(game.actionMoveTo(active, 2, 2));
         assertTrue(game.actionMoveTo(active, 3, 1));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
         assertFalse(game.checkKing(Player.WHITE));
 
 
@@ -191,29 +204,35 @@ public class GameTest {
         assertTrue(game.actionMoveTo(active, 2, 0));
         assertFalse(game.checkKing(Player.BLACK));
         game.updateReachableTilesForAll();
+        game.printConfiguration();
 
 
         active = game.getPlayers(Player.BLACK).get("Knight0");
         assertNotNull(game.actionMoveTo(active, 1, 2));
         game.updateReachableTilesForAll();
         assertTrue(game.checkKing(Player.WHITE));
+        game.printConfiguration();
 
 
         active = game.getPlayers(Player.WHITE).get("Queen");
         assertNotNull(game.actionKillPieceAtLocation(active, 1, 2));
         game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
+        game.printConfiguration();
 
 
         active = game.getPlayers(Player.BLACK).get("Rook0");
         assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
         game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
+        game.printConfiguration();
+
 
         active = game.getPlayers(Player.WHITE).get("Pawn1");
         assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
         game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.BLACK));
+        game.printConfiguration();
 
 
         active = game.getPlayers(Player.BLACK).get("Pawn4");
@@ -221,11 +240,167 @@ public class GameTest {
         assertTrue(game.actionMoveTo(active, 4, 4));
         game.updateReachableTilesForAll();
         assertFalse(game.checkKing(Player.WHITE));
+        game.printConfiguration();
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn4");
         assertTrue(game.actionMoveTo(active, 3, 4));
         game.updateReachableTilesForAll();
+        assertFalse(game.checkKing(Player.BLACK));
+        game.printConfiguration();
+
+        active = game.getPlayers(Player.BLACK).get("Queen");
+        assertFalse(game.actionMoveTo(active, 5, 2));
+        assertTrue(game.actionMoveTo(active, 3, 7));
+        game.updateReachableTilesForAll();
+        assertFalse(game.checkKing(Player.WHITE));
+        game.printConfiguration();
+
+
+        active = game.getPlayers(Player.WHITE).get("Pawn5");
+        assertTrue(game.actionMoveTo(active, 3, 5));
+        game.updateReachableTilesForAll();
+        assertFalse(game.checkKing(Player.BLACK));
+        game.printConfiguration();
+
+        active = game.getPlayers(Player.BLACK).get("Queen");
+        assertNotNull(game.actionKillPieceAtLocation(active, 0, 4));
+        game.updateReachableTilesForAll();
+        game.printConfiguration();
+
+//        assertFalse(game.checkKing(Player.WHITE));
+    }
+
+    @Test
+    public void testBattle_withGUI() throws Exception {
+        Game game = new Game();
+        game.setUpBoardAndPieces(BoardShape.SQUARE);
+        ChessBoardController controller = new ChessBoardController();
+
+        Image blackTile = ImageIO.read(new File(System.getProperty("user.home") + "/temp/blackTile.jpeg"));
+        Image whiteTile = ImageIO.read(new File(System.getProperty("user.home") + "/temp/whiteTile.jpg"));
+        ChessBoardView chessBoardView = new ChessBoardView(BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        Piece active;
+        game.updateReachableTilesForAll();
+
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertTrue(game.actionMoveTo(active, 3, 2));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+
+        active = game.getPlayers(Player.BLACK).get("Pawn1");
+        assertTrue(game.actionMoveTo(active, 4, 1));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertNotNull(game.actionKillPieceAtLocation(active, 4, 1));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Pawn0");
+        assertFalse(game.actionMoveTo(active, 5, 1));
+        assertTrue(game.actionMoveTo(active, 5, 0));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn2");
+        assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 5, 1));
+        assertNotNull(game.actionKillPieceAtLocation(active, 5, 0));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 2, 3));
+        assertTrue(game.actionMoveTo(active, 2, 2));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertFalse(game.actionMoveTo(active, 2, 2));
+        assertTrue(game.actionMoveTo(active, 3, 1));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+
+        active = game.getPlayers(Player.WHITE).get("Pawn0");
+        assertTrue(game.actionMoveTo(active, 2, 0));
+        assertFalse(game.checkKing(Player.BLACK));
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        game.updateReachableTilesForAll();
+
+
+        active = game.getPlayers(Player.BLACK).get("Knight0");
+        assertNotNull(game.actionMoveTo(active, 1, 2));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertTrue(game.checkKing(Player.WHITE));
+
+
+        active = game.getPlayers(Player.WHITE).get("Queen");
+        assertNotNull(game.actionKillPieceAtLocation(active, 1, 2));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+
+        active = game.getPlayers(Player.BLACK).get("Rook0");
+        assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+        active = game.getPlayers(Player.WHITE).get("Pawn1");
+        assertNotNull(game.actionKillPieceAtLocation(active, 2, 0));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.BLACK));
+
+
+        active = game.getPlayers(Player.BLACK).get("Pawn4");
+        assertFalse(game.actionMoveTo(active, 3, 4));
+        assertTrue(game.actionMoveTo(active, 4, 4));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+        assertFalse(game.checkKing(Player.WHITE));
+
+
+        active = game.getPlayers(Player.WHITE).get("Pawn4");
+        assertTrue(game.actionMoveTo(active, 3, 4));
+        game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
         assertFalse(game.checkKing(Player.BLACK));
 
 
@@ -233,19 +408,27 @@ public class GameTest {
         assertFalse(game.actionMoveTo(active, 5, 2));
         assertTrue(game.actionMoveTo(active, 3, 7));
         game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
         assertFalse(game.checkKing(Player.WHITE));
 
 
         active = game.getPlayers(Player.WHITE).get("Pawn5");
         assertTrue(game.actionMoveTo(active, 3, 5));
         game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
         assertFalse(game.checkKing(Player.BLACK));
 
 
         active = game.getPlayers(Player.BLACK).get("Queen");
         assertNotNull(game.actionKillPieceAtLocation(active, 0, 4));
         game.updateReachableTilesForAll();
+        chessBoardView.refreshBoard(game);
+        Thread.sleep(5000);
+
 //        assertFalse(game.checkKing(Player.WHITE));
     }
+
 
 }

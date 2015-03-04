@@ -1,19 +1,23 @@
 package org.bitbucket.calvinmwhu.chess.view;
 
-import org.bitbucket.calvinmwhu.chess.chessboard.Board;
+import org.bitbucket.calvinmwhu.chess.controller.ChessBoardController;
 import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
+import org.bitbucket.calvinmwhu.chess.values.PieceName;
 import org.bitbucket.calvinmwhu.chess.values.Player;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.tree.ExpandVetoException;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * Created by calvinmwhu on 2/20/15.
  */
-public class ChessBoardView extends JFrame {
-    private String imageDir;
+public class ChessBoardView extends JFrame{
     private final int height;
     private final int width;
     private TextField[] scores;
@@ -22,12 +26,13 @@ public class ChessBoardView extends JFrame {
     private JPanel northPanel;
     private JPanel westPanel;
     private JPanel eastPanel;
+    private HashMap<String, ImageIcon> pieceImages = new HashMap<String, ImageIcon>();
 
-    private JButton start=new JButton("Start");
-    private JButton restart=new JButton("Restart");
-    private JButton forfeit=new JButton("Forfeit");
-    private JButton undo=new JButton("Undo");
-    private JButton redo=new JButton("Redo");
+    private JButton start = new JButton("Start");
+    private JButton restart = new JButton("Restart");
+    private JButton forfeit = new JButton("Forfeit");
+    private JButton undo = new JButton("Undo");
+    private JButton redo = new JButton("Redo");
 
     private Image whiteTile;
     private Image blackTile;
@@ -48,30 +53,27 @@ public class ChessBoardView extends JFrame {
         }
     }
 
-    public void addStartListener(ActionListener a){
+    public void addStartListener(ActionListener a) {
         start.addActionListener(a);
     }
 
-    public void addRestartListener(ActionListener a){
+    public void addRestartListener(ActionListener a) {
         restart.addActionListener(a);
     }
 
-    public void addForfeitListener(ActionListener a){
+    public void addForfeitListener(ActionListener a) {
         forfeit.addActionListener(a);
     }
 
-    public void addUndoListener(ActionListener a){
+    public void addUndoListener(ActionListener a) {
         undo.addActionListener(a);
     }
 
-    public void addRedoListener(ActionListener a){
+    public void addRedoListener(ActionListener a) {
         redo.addActionListener(a);
     }
 
-    public ChessBoardView(Image whiteTile, Image blackTile, int height, int width) {
-
-        this.whiteTile = whiteTile;
-        this.blackTile = blackTile;
+    public ChessBoardView(int height, int width) throws Exception{
         this.height = height;
         this.width = width;
         this.scores = new TextField[2];
@@ -82,7 +84,23 @@ public class ChessBoardView extends JFrame {
         eastPanel = new JPanel();
         centerlabels = new JLabel[this.height][this.width];
         imagePanels = new ImagePanel[this.height][this.width];
+        loadPieceImages();
         setUpChessBoardUI();
+    }
+
+    private void loadPieceImages() throws Exception{
+        for (Player player : Player.values()) {
+            if (player != Player.UNOCCUPIED) {
+                String color = player.getColor();
+                for (PieceName pieceName : PieceName.values()) {
+                    String name = color + pieceName.getName();
+                    String filename = name + ".png";
+                    pieceImages.put(name, new ImageIcon(this.getClass().getResource(filename)));
+                }
+            }
+        }
+        whiteTile = ImageIO.read(this.getClass().getResource("whiteTile.jpg"));
+        blackTile = ImageIO.read(this.getClass().getResource("blackTile.jpeg"));
     }
 
     private void setUpChessBoardUI() {
@@ -91,10 +109,24 @@ public class ChessBoardView extends JFrame {
         setLayout(new BorderLayout());
         setSize(800, 800);
         setLocationRelativeTo(null);
-        setVisible(true);
-
         constructContentPane(getContentPane());
+        setVisible(true);
     }
+
+//
+//    private void setUpChessBoardUIForParentController(ChessBoardController controller) {
+//        setTitle("CS242 Chess Game");
+//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        setLayout(new BorderLayout());
+//        setSize(800, 800);
+//        setLocationRelativeTo(null);
+//        constructContentPane(getContentPane());
+//        setVisible(true);
+//
+//        controller.setName("CS242 Chess Game");
+//        controller.setLayout(new BorderLayout());
+//
+//    }
 
     private void constructContentPane(Container contentPane) {
 
@@ -107,17 +139,17 @@ public class ChessBoardView extends JFrame {
         contentPane.add(centerPanel, BorderLayout.CENTER);
         contentPane.add(southPanel, BorderLayout.SOUTH);
         contentPane.add(westPanel, BorderLayout.WEST);
-        contentPane.add(northPanel,BorderLayout.NORTH);
+        contentPane.add(northPanel, BorderLayout.NORTH);
         contentPane.add(eastPanel, BorderLayout.EAST);
     }
 
-    private void constructNorthPanel(){
-        GridLayout gridLayout = new GridLayout(0,2);
+    private void constructNorthPanel() {
+        GridLayout gridLayout = new GridLayout(0, 2);
         northPanel.setLayout(gridLayout);
         JPanel[] panels = new JPanel[2];
-        for(int i=0; i<panels.length; i++){
+        for (int i = 0; i < panels.length; i++) {
             panels[i] = new JPanel(new FlowLayout());
-            JLabel name = new JLabel("Player_"+i+"'s score");
+            JLabel name = new JLabel("Player_" + i + "'s score");
             scores[i] = new TextField("");
             panels[i].add(name);
             panels[i].add(scores[i]);
@@ -125,8 +157,8 @@ public class ChessBoardView extends JFrame {
         }
     }
 
-    private void constructEastPanel(){
-        eastPanel.setLayout(new GridLayout(5,0));
+    private void constructEastPanel() {
+        eastPanel.setLayout(new GridLayout(5, 0));
         eastPanel.add(start);
         eastPanel.add(restart);
         eastPanel.add(forfeit);
@@ -148,7 +180,7 @@ public class ChessBoardView extends JFrame {
 
 
     private void constructSouthPanel() {
-        GridLayout gridLayout = new GridLayout(0,this.width);
+        GridLayout gridLayout = new GridLayout(0, this.width);
         southPanel.setLayout(gridLayout);
 
         JLabel[] labels = new JLabel[8];
@@ -167,7 +199,7 @@ public class ChessBoardView extends JFrame {
         String[] files = {"A", "B", "C", "D", "E", "F", "G", "H"};
         int[] ranks = {8, 7, 6, 5, 4, 3, 2, 1};
 
-        for (int rank = ranks.length-1; rank>=0; rank--) {
+        for (int rank = ranks.length - 1; rank >= 0; rank--) {
             for (int file = 0; file < files.length; file++) {
                 imagePanels[rank][file] = (rank + file) % 2 == 1 ? new ImagePanel(whiteTile) : new ImagePanel(blackTile);
                 imagePanels[rank][file].setName(files[file] + ranks[rank]);
@@ -185,7 +217,14 @@ public class ChessBoardView extends JFrame {
                 centerlabels[rank][file].setIcon(null);
             }
         }
+//        game.printConfiguration();
+//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").getTileUnderPiece());
+//
         updatePiecesConfiguration(game);
+//        System.out.println(centerlabels[0][0].getIcon()==null);
+//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0"));
+//        System.out.println(game.getChessBoard().getTileAtLocation(0,0));
+//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").removedFromBoard());
     }
 
     public void updatePiecesConfiguration(Game game) {
@@ -203,14 +242,13 @@ public class ChessBoardView extends JFrame {
         int file = piece.getFile();
         String color = piece.getPlayer().getColor();
         String name = piece.getName().getName();
-        String filename = System.getProperty("user.home") + "/temp/" + color + name + ".png";
-        centerlabels[rank][file].setIcon(new ImageIcon(filename));
+        centerlabels[rank][file].setIcon(pieceImages.get(color + name));
     }
 
-    public void markPosition(){
-        for(int rank = 0; rank<height; rank++){
-            for(int file=0; file<width; file++){
-                centerlabels[rank][file].setText("("+String.valueOf(rank)+","+String.valueOf(file)+")");
+    public void markPosition() {
+        for (int rank = 0; rank < height; rank++) {
+            for (int file = 0; file < width; file++) {
+                centerlabels[rank][file].setText("(" + String.valueOf(rank) + "," + String.valueOf(file) + ")");
             }
         }
 

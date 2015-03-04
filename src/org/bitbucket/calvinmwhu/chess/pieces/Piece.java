@@ -171,7 +171,7 @@ public abstract class Piece {
 
     @Override
     public String toString() {
-        return getPlayer().getColor() + getName().getName() + getIndex();
+        return getPlayer().getColor() + getName().getName() + getIndex()+" at ("+getRank()+","+getFile()+")";
     }
 
 }

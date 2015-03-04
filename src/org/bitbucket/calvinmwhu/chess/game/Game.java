@@ -110,11 +110,11 @@ public class Game {
     public boolean actionMoveTo(Piece activePiece, int toRank, int toFile) {
         BoardTile toTile = chessBoard.getTileAtLocation(toRank, toFile);
         if (activePiece.moveToTile(toTile)) {
-            printConfiguration();
+//            printConfiguration();
 
             return true;
         }
-        printConfiguration();
+//        printConfiguration();
 
         return false;
     }
@@ -122,11 +122,11 @@ public class Game {
     public Piece actionKillPieceAtLocation(Piece activePiece, int toRank, int toFile) {
         Piece target = chessBoard.getPieceAtLocation(toRank, toFile);
         if (activePiece.killTargetPiece(target)) {
-            printConfiguration();
+//            printConfiguration();
             return target;
         }
 
-        printConfiguration();
+//        printConfiguration();
         return null;
     }
 
@@ -143,7 +143,6 @@ public class Game {
         Piece targetKing = targetPieces.get(PieceName.KING.getName());
         BoardTile tile = targetKing.getTileUnderPiece();
         for (Piece piece : attackerPieces.values()) {
-//            System.out.println(piece.getPlayer().getColor() + piece.getName().getName() + " can move to " + piece.getReachableTiles());
             if (!piece.removedFromBoard() && piece.getReachableTiles().contains(tile)) {
                 return true;
             }
