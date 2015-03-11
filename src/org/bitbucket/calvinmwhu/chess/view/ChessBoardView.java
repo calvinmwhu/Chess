@@ -8,16 +8,16 @@ import org.bitbucket.calvinmwhu.chess.values.Player;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.tree.ExpandVetoException;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 /**
  * Created by calvinmwhu on 2/20/15.
  */
-public class ChessBoardView extends JPanel{
+public class ChessBoardView extends JPanel {
     private final int height;
     private final int width;
     private TextField[] scores;
@@ -33,11 +33,12 @@ public class ChessBoardView extends JPanel{
     private JButton forfeit = new JButton("Forfeit");
     private JButton undo = new JButton("Undo");
     private JButton redo = new JButton("Redo");
+    private JButton Customized = new JButton("Customized");
 
     private Image whiteTile;
     private Image blackTile;
 
-    private JLabel[][] centerlabels;
+    private JLabel[][] centerLabels;
     private ImagePanel[][] imagePanels;
 
     class ImagePanel extends JPanel {
@@ -73,7 +74,17 @@ public class ChessBoardView extends JPanel{
         redo.addActionListener(a);
     }
 
-    public ChessBoardView(ChessBoardController controller, int height, int width) throws Exception{
+    public void addMouthActionListener(MouseAdapter m, int rank, int file){
+        try{
+            imagePanels[rank][file].addMouseListener(m);
+        }catch (NullPointerException e){
+            System.err.println(e.getMessage());
+        }catch (ArrayIndexOutOfBoundsException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public ChessBoardView(ChessBoardController controller, int height, int width) throws Exception {
         this.height = height;
         this.width = width;
         this.scores = new TextField[2];
@@ -82,13 +93,13 @@ public class ChessBoardView extends JPanel{
         northPanel = new JPanel();
         westPanel = new JPanel();
         eastPanel = new JPanel();
-        centerlabels = new JLabel[this.height][this.width];
+        centerLabels = new JLabel[this.height][this.width];
         imagePanels = new ImagePanel[this.height][this.width];
         loadPieceImages();
         setUpChessBoardUI(controller);
     }
 
-    private void loadPieceImages() throws Exception{
+    private void loadPieceImages() throws Exception {
         for (Player player : Player.values()) {
             if (player != Player.UNOCCUPIED) {
                 String color = player.getColor();
@@ -206,9 +217,18 @@ public class ChessBoardView extends JPanel{
             for (int file = 0; file < files.length; file++) {
                 imagePanels[rank][file] = (rank + file) % 2 == 1 ? new ImagePanel(whiteTile) : new ImagePanel(blackTile);
                 imagePanels[rank][file].setName(files[file] + ranks[rank]);
-                centerlabels[rank][file] = new JLabel();
-                centerlabels[rank][file].setName(imagePanels[rank][file].getName());
-                imagePanels[rank][file].add(centerlabels[rank][file]);
+                centerLabels[rank][file] = new JLabel();
+                centerLabels[rank][file].setName(imagePanels[rank][file].getName());
+                imagePanels[rank][file].add(centerLabels[rank][file]);
+
+//                imagePanels[rank][file].addMouseListener(new MouseAdapter() {
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//                        super.mouseClicked(e);
+//                        System.out.println("hello from ");
+//                    }
+//                });
+
                 centerPanel.add(imagePanels[rank][file]);
             }
         }
@@ -217,14 +237,14 @@ public class ChessBoardView extends JPanel{
     public void refreshBoard(Game game) {
         for (int rank = 0; rank < height; rank++) {
             for (int file = 0; file < width; file++) {
-                centerlabels[rank][file].setIcon(null);
+                centerLabels[rank][file].setIcon(null);
             }
         }
 //        game.printConfiguration();
 //        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").getTileUnderPiece());
 //
         updatePiecesConfiguration(game);
-//        System.out.println(centerlabels[0][0].getIcon()==null);
+//        System.out.println(centerLabels[0][0].getIcon()==null);
 //        System.out.println(game.getPlayers(Player.WHITE).get("Rook0"));
 //        System.out.println(game.getChessBoard().getTileAtLocation(0,0));
 //        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").removedFromBoard());
@@ -245,13 +265,13 @@ public class ChessBoardView extends JPanel{
         int file = piece.getFile();
         String color = piece.getPlayer().getColor();
         String name = piece.getName().getName();
-        centerlabels[rank][file].setIcon(pieceImages.get(color + name));
+        centerLabels[rank][file].setIcon(pieceImages.get(color + name));
     }
 
     public void markPosition() {
         for (int rank = 0; rank < height; rank++) {
             for (int file = 0; file < width; file++) {
-                centerlabels[rank][file].setText("(" + String.valueOf(rank) + "," + String.valueOf(file) + ")");
+                centerLabels[rank][file].setText("(" + String.valueOf(rank) + "," + String.valueOf(file) + ")");
             }
         }
 

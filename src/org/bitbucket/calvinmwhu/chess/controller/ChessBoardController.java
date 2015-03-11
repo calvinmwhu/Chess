@@ -25,58 +25,58 @@ public class ChessBoardController extends JApplet {
         return boardView;
     }
 
+
     public void init() {
         try {
-            setName("CS242 Chess Game");
-            setLayout(new BorderLayout());
-            setSize(800, 800);
-            boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
-            gameModel = new Game();
-            gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
-            boardView.refreshBoard(gameModel);
-            setVisible(true);
+            setupModelAndView();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void startChessGame() {
-        Thread gameThread = new Thread() {
-            @Override
-            public void run() {
-                gameLoop();
-            }
-        };
-        gameThread.start();
+
+    private void setupModelAndView() throws Exception {
+        setName("CS242 Chess Game");
+        setLayout(new BorderLayout());
+        setSize(800, 800);
+        boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
+        gameModel = new Game();
+        gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
+        boardView.refreshBoard(gameModel);
+        setVisible(true);
     }
 
-    public void gameLoop() {
-        long beginTime, timeTaken, timeLeft;
-        while (!gameOver) {
-            beginTime = System.nanoTime();
-            System.out.println("hi");
-
-//            if (!gamePaused) {
-//                // Update the state and position of all the game objects,
-//                // detect collisions and provide responses.
-//                gameUpdate();
+    
+//
+//    public void startChessGame() {
+//        Thread gameThread = new Thread() {
+//            @Override
+//            public void run() {
+//                gameLoop();
 //            }
-
-            //do the update here
-
-            // Refresh the display
-            // Delay timer to provide the necessary delay to meet the target rate
-            timeTaken = System.nanoTime() - beginTime;
-            timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  // in milliseconds
-            if (timeLeft < 10) timeLeft = 10;   // set a minimum
-            try {
-                // Provides the necessary delay and also yields control so that other thread can do work.
-                Thread.sleep(timeLeft);
-            } catch (InterruptedException ex) {
-            }
-
-        }
-    }
+//        };
+//        gameThread.start();
+//    }
+//
+//    public void gameLoop() {
+//        long beginTime, timeTaken, timeLeft;
+//        while (!gameOver) {
+//            beginTime = System.nanoTime();
+//            System.out.println("hi");
+//
+//            // Refresh the display
+//            // Delay timer to provide the necessary delay to meet the target rate
+//            timeTaken = System.nanoTime() - beginTime;
+//            timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  // in milliseconds
+//            if (timeLeft < 10) timeLeft = 10;   // set a minimum
+//            try {
+//                // Provides the necessary delay and also yields control so that other thread can do work.
+//                Thread.sleep(timeLeft);
+//            } catch (InterruptedException ex) {
+//            }
+//
+//        }
+//    }
 
 
 }
