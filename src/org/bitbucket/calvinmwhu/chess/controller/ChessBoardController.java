@@ -1,7 +1,9 @@
 package org.bitbucket.calvinmwhu.chess.controller;
 
 
+import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.game.Game;
+import org.bitbucket.calvinmwhu.chess.pieces.Piece;
 import org.bitbucket.calvinmwhu.chess.values.BoardDimension;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
 import org.bitbucket.calvinmwhu.chess.view.ChessBoardView;
@@ -9,9 +11,9 @@ import org.bitbucket.calvinmwhu.chess.view.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * The game controller for connecting the view and model.
@@ -36,6 +38,7 @@ public class ChessBoardController extends JApplet {
         try {
             setupModelAndView();
             addMouseListenerToTiles();
+            addActionListenerToStart();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,6 +51,7 @@ public class ChessBoardController extends JApplet {
         boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
         gameModel = new Game();
         gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
+        gameModel.updateReachableTilesForAll();
         boardView.refreshBoard(gameModel);
         setVisible(true);
     }
@@ -59,16 +63,27 @@ public class ChessBoardController extends JApplet {
 
         for (int rank = 0; rank < height; rank++) {
             for (int file = 0; file < width; file++) {
-                ImagePanel imagePanel=boardView.getImagePanelAtPosition(rank, file);
+                ImagePanel imagePanel = boardView.getImagePanelAtPosition(rank, file);
                 imagePanel.addMouseListener(new ImagePanelListener(imagePanel));
             }
         }
     }
 
-    class ImagePanelListener extends MouseAdapter{
+    private void addActionListenerToStart() {
+        boardView.addStartListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!gameStarted) {
+                    gameStarted = true;
+                }
+            }
+        });
+    }
+
+    class ImagePanelListener extends MouseAdapter {
         ImagePanel imagePanel;
 
-        public ImagePanelListener(ImagePanel imagePanel){
+        public ImagePanelListener(ImagePanel imagePanel) {
             this.imagePanel = imagePanel;
         }
 
@@ -78,14 +93,27 @@ public class ChessBoardController extends JApplet {
             int rank = imagePanel.getRank();
             int file = imagePanel.getFile();
 //            System.out.println(imagePanel);
-            gameStarted=true;
-            if(gameStarted){
-                if(gameModel.getActivePiece()==null){
-                    gameModel.setActivePiece(rank,file);
-                    System.out.println(gameModel.getActivePiece());
+            if (gameStarted) {
+                if (gameModel.getActivePiece() == null) {
+                    gameModel.setActivePiece(rank, file);
+                    Piece activePiece = gameModel.getActivePiece();
+                    System.out.println(activePiece);
+//                    gameModel.setActivePiece(null);
+                    //to do: highlight reachable squares:
+                    if (activePiece != null) {
+
+                        HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
+                        System.out.println(reachableTiles);
+
+                    }
+
+//                    gameModel.setActivePiece(null);
+                } else {
                     gameModel.setActivePiece(null);
                 }
             }
+            gameModel.updateReachableTilesForAll();
+            boardView.refreshBoard(gameModel);
         }
     }
 
