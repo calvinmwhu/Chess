@@ -41,49 +41,6 @@ public class ChessBoardView extends JPanel {
     private JLabel[][] centerLabels;
     private ImagePanel[][] imagePanels;
 
-    class ImagePanel extends JPanel {
-        private Image image;
-
-        public ImagePanel(Image img) {
-            image = img;
-        }
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            graphics.drawImage(image, 0, 0, null);
-        }
-    }
-
-    public void addStartListener(ActionListener a) {
-        start.addActionListener(a);
-    }
-
-    public void addRestartListener(ActionListener a) {
-        restart.addActionListener(a);
-    }
-
-    public void addForfeitListener(ActionListener a) {
-        forfeit.addActionListener(a);
-    }
-
-    public void addUndoListener(ActionListener a) {
-        undo.addActionListener(a);
-    }
-
-    public void addRedoListener(ActionListener a) {
-        redo.addActionListener(a);
-    }
-
-    public void addMouthActionListener(MouseAdapter m, int rank, int file){
-        try{
-            imagePanels[rank][file].addMouseListener(m);
-        }catch (NullPointerException e){
-            System.err.println(e.getMessage());
-        }catch (ArrayIndexOutOfBoundsException e){
-            System.err.println(e.getMessage());
-        }
-    }
-
     public ChessBoardView(ChessBoardController controller, int height, int width) throws Exception {
         this.height = height;
         this.width = width;
@@ -115,6 +72,7 @@ public class ChessBoardView extends JPanel {
     }
 
     private void setUpChessBoardUI(ChessBoardController controller) {
+        //the commented out code is for setting up without using a java applet
 //        setTitle("CS242 Chess Game");
 //        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //        setLayout(new BorderLayout());
@@ -122,25 +80,8 @@ public class ChessBoardView extends JPanel {
 //        setLocationRelativeTo(null);
 //        constructContentPane(getContentPane());
 //        setVisible(true);
-
         constructContentPane(controller.getContentPane());
-
     }
-
-//
-//    private void setUpChessBoardUIForParentController(ChessBoardController controller) {
-//        setTitle("CS242 Chess Game");
-//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        setLayout(new BorderLayout());
-//        setSize(800, 800);
-//        setLocationRelativeTo(null);
-//        constructContentPane(getContentPane());
-//        setVisible(true);
-//
-//        controller.setName("CS242 Chess Game");
-//        controller.setLayout(new BorderLayout());
-//
-//    }
 
     private void constructContentPane(Container contentPane) {
 
@@ -211,23 +152,18 @@ public class ChessBoardView extends JPanel {
         centerPanel.setLayout(gridLayout);
 
         String[] files = {"A", "B", "C", "D", "E", "F", "G", "H"};
-        int[] ranks = {8, 7, 6, 5, 4, 3, 2, 1};
+//        int[] ranks = {8, 7, 6, 5, 4, 3, 2, 1};
+
+        int[] ranks = {1, 2, 3, 4, 5, 6, 7, 8};
+
 
         for (int rank = ranks.length - 1; rank >= 0; rank--) {
             for (int file = 0; file < files.length; file++) {
-                imagePanels[rank][file] = (rank + file) % 2 == 1 ? new ImagePanel(whiteTile) : new ImagePanel(blackTile);
-                imagePanels[rank][file].setName(files[file] + ranks[rank]);
                 centerLabels[rank][file] = new JLabel();
+                imagePanels[rank][file] = (rank + file) % 2 == 1 ? new ImagePanel(whiteTile, centerLabels[rank][file], rank, file) : new ImagePanel(blackTile, centerLabels[rank][file], rank, file);
+                imagePanels[rank][file].setName(files[file] + ranks[rank]);
                 centerLabels[rank][file].setName(imagePanels[rank][file].getName());
                 imagePanels[rank][file].add(centerLabels[rank][file]);
-
-//                imagePanels[rank][file].addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mouseClicked(MouseEvent e) {
-//                        super.mouseClicked(e);
-//                        System.out.println("hello from ");
-//                    }
-//                });
 
                 centerPanel.add(imagePanels[rank][file]);
             }
@@ -276,5 +212,69 @@ public class ChessBoardView extends JPanel {
         }
 
     }
+
+    public int getDimensionHeight() {
+        return height;
+    }
+
+    public int getDimensionWidth() {
+        return width;
+    }
+
+    public ImagePanel getImagePanelAtPosition(int rank, int file) {
+        return imagePanels[rank][file];
+    }
+
+
+    public void addStartListener(ActionListener a) {
+        try {
+            start.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void addRestartListener(ActionListener a) {
+        try {
+            restart.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void addForfeitListener(ActionListener a) {
+        try {
+            forfeit.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void addUndoListener(ActionListener a) {
+        try {
+            undo.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void addRedoListener(ActionListener a) {
+        try {
+            redo.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void addMouthActionListener(int rank, int file, MouseAdapter m) {
+        try {
+            imagePanels[rank][file].addMouseListener(m);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
 
 }

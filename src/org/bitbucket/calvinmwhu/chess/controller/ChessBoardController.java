@@ -5,9 +5,13 @@ import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.values.BoardDimension;
 import org.bitbucket.calvinmwhu.chess.values.BoardShape;
 import org.bitbucket.calvinmwhu.chess.view.ChessBoardView;
+import org.bitbucket.calvinmwhu.chess.view.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * The game controller for connecting the view and model.
@@ -16,24 +20,26 @@ import java.awt.*;
 public class ChessBoardController extends JApplet {
     private ChessBoardView boardView;
     private Game gameModel;
-    boolean gameOver = false;
-    static final int UPDATES_PER_SEC = 10;    // number of game update per second
-    static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  // nanoseconds
+    private boolean gameOver;
+    private boolean gameStarted;
 
+    public ChessBoardController() {
+        gameOver = false;
+        gameStarted = false;
+    }
 
     public ChessBoardView getBoardView() {
         return boardView;
     }
 
-
     public void init() {
         try {
             setupModelAndView();
+            addMouseListenerToTiles();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     private void setupModelAndView() throws Exception {
         setName("CS242 Chess Game");
@@ -46,7 +52,34 @@ public class ChessBoardController extends JApplet {
         setVisible(true);
     }
 
-    
+    private void addMouseListenerToTiles() {
+        int height = BoardDimension.SQUARE.getHeight();
+        int width = BoardDimension.SQUARE.getWidth();
+
+
+        for (int rank = 0; rank < height; rank++) {
+            for (int file = 0; file < width; file++) {
+                ImagePanel imagePanel=boardView.getImagePanelAtPosition(rank, file);
+                imagePanel.addMouseListener(new ImagePanelListener(imagePanel));
+            }
+        }
+    }
+
+    class ImagePanelListener extends MouseAdapter{
+        ImagePanel imagePanel;
+
+        public ImagePanelListener(ImagePanel imagePanel){
+            this.imagePanel = imagePanel;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+            System.out.println(imagePanel);
+        }
+    }
+
+
 //
 //    public void startChessGame() {
 //        Thread gameThread = new Thread() {
