@@ -75,7 +75,17 @@ public class ChessBoardController extends JApplet {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            System.out.println(imagePanel);
+            int rank = imagePanel.getRank();
+            int file = imagePanel.getFile();
+//            System.out.println(imagePanel);
+            gameStarted=true;
+            if(gameStarted){
+                if(gameModel.getActivePiece()==null){
+                    gameModel.setActivePiece(rank,file);
+                    System.out.println(gameModel.getActivePiece());
+                    gameModel.setActivePiece(null);
+                }
+            }
         }
     }
 

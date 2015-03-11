@@ -20,12 +20,14 @@ public class Game {
     private HashMap<String, Piece> whitePlayer;
     private HashMap<String, Piece> blackPlayer;
     private Player turn;
+    private Piece activePiece;
 
     /**
      * constructor, creates an empty game, gives the turn to white player
      */
     public Game() {
         turn = Player.WHITE;
+        activePiece=null;
     }
 
     /**
@@ -98,6 +100,19 @@ public class Game {
         return chessBoard;
     }
 
+
+    public Piece getActivePiece(){
+        return activePiece;
+    }
+
+    public void setActivePiece(int rank, int file){
+        activePiece = chessBoard.getPieceAtLocation(rank,file);
+    }
+
+    public void setActivePiece(Piece piece){
+        activePiece=piece;
+    }
+
     /**
      * @param player
      * @return player of either white or black color
@@ -107,7 +122,7 @@ public class Game {
     }
 
 
-    public boolean actionMoveTo(Piece activePiece, int toRank, int toFile) {
+    public boolean actionMoveTo(int toRank, int toFile) {
         BoardTile toTile = chessBoard.getTileAtLocation(toRank, toFile);
         if (activePiece.moveToTile(toTile)) {
 //            printConfiguration();
@@ -119,7 +134,7 @@ public class Game {
         return false;
     }
 
-    public Piece actionKillPieceAtLocation(Piece activePiece, int toRank, int toFile) {
+    public Piece actionKillPieceAtLocation(int toRank, int toFile) {
         Piece target = chessBoard.getPieceAtLocation(toRank, toFile);
         if (activePiece.killTargetPiece(target)) {
 //            printConfiguration();

@@ -152,10 +152,7 @@ public class ChessBoardView extends JPanel {
         centerPanel.setLayout(gridLayout);
 
         String[] files = {"A", "B", "C", "D", "E", "F", "G", "H"};
-//        int[] ranks = {8, 7, 6, 5, 4, 3, 2, 1};
-
         int[] ranks = {1, 2, 3, 4, 5, 6, 7, 8};
-
 
         for (int rank = ranks.length - 1; rank >= 0; rank--) {
             for (int file = 0; file < files.length; file++) {
@@ -176,14 +173,7 @@ public class ChessBoardView extends JPanel {
                 centerLabels[rank][file].setIcon(null);
             }
         }
-//        game.printConfiguration();
-//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").getTileUnderPiece());
-//
         updatePiecesConfiguration(game);
-//        System.out.println(centerLabels[0][0].getIcon()==null);
-//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0"));
-//        System.out.println(game.getChessBoard().getTileAtLocation(0,0));
-//        System.out.println(game.getPlayers(Player.WHITE).get("Rook0").removedFromBoard());
     }
 
     public void updatePiecesConfiguration(Game game) {
