@@ -1,6 +1,7 @@
 package org.bitbucket.calvinmwhu.chess.controller;
 
 
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.game.Game;
 import org.bitbucket.calvinmwhu.chess.pieces.Piece;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * The game controller for connecting the view and model.
@@ -24,10 +26,14 @@ public class ChessBoardController extends JApplet {
     private Game gameModel;
     private boolean gameOver;
     private boolean gameStarted;
+    static final int UPDATES_PER_SEC = 30;    // number of game update per second
+    static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  // nanoseconds
+    long updateSeq;
 
     public ChessBoardController() {
         gameOver = false;
         gameStarted = false;
+        updateSeq=0;
     }
 
     public ChessBoardView getBoardView() {
@@ -35,24 +41,47 @@ public class ChessBoardController extends JApplet {
     }
 
     public void init() {
+//        try {
+//            setupModelAndView();
+//            addMouseListenerToTiles();
+//            addActionListenerToStart();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+
         try {
-            setupModelAndView();
-            addMouseListenerToTiles();
-            addActionListenerToStart();
+            // Use invokeAndWait() to ensure that init() exits after GUI construction
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    setupModelAndView();
+                    addMouseListenerToTiles();
+                    addActionListenerToStart();
+                    gameStart();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setupModelAndView() throws Exception {
+    public Game getGameModel(){
+        return gameModel;
+    }
+
+    private void setupModelAndView() {
         setName("CS242 Chess Game");
         setLayout(new BorderLayout());
         setSize(800, 800);
-        boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
+
         gameModel = new Game();
         gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
         gameModel.updateReachableTilesForAll();
-        boardView.refreshBoard(gameModel);
+        boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
+
+
+        boardView.updatePiecesConfiguration();
         setVisible(true);
     }
 
@@ -92,62 +121,76 @@ public class ChessBoardController extends JApplet {
             super.mouseClicked(e);
             int rank = imagePanel.getRank();
             int file = imagePanel.getFile();
-//            System.out.println(imagePanel);
+
+//            boardView.removePiece(rank,file);
+
             if (gameStarted) {
+                gameModel.setActivePiece(rank, file);
+                
                 if (gameModel.getActivePiece() == null) {
-                    gameModel.setActivePiece(rank, file);
-                    Piece activePiece = gameModel.getActivePiece();
-                    System.out.println(activePiece);
-//                    gameModel.setActivePiece(null);
-                    //to do: highlight reachable squares:
-                    if (activePiece != null) {
+//                    gameModel.setActivePiece(rank, file);
+//                    Piece activePiece = gameModel.getActivePiece();
+//                    System.out.println(activePiece);
+//                    if (activePiece != null) {
+//                        HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
+//                        Iterator<BoardTile> it = reachableTiles.iterator();
+//                        while (it.hasNext()) {
+//                            BoardTile tile = it.next();
+//                            boardView.highLightPanel(tile.getRankPos(), tile.getFilePos());
+//                        }
+//                    }
 
-                        HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
-                        System.out.println(reachableTiles);
-
-                    }
-
-//                    gameModel.setActivePiece(null);
-                } else {
-                    gameModel.setActivePiece(null);
                 }
             }
             gameModel.updateReachableTilesForAll();
-            boardView.refreshBoard(gameModel);
+            updateSeq = updateSeq% Long.MAX_VALUE + 1;
+//            boardView.refreshBoard(gameModel);
         }
     }
 
 
-//
-//    public void startChessGame() {
-//        Thread gameThread = new Thread() {
-//            @Override
-//            public void run() {
-//                gameLoop();
-//            }
-//        };
-//        gameThread.start();
-//    }
-//
-//    public void gameLoop() {
-//        long beginTime, timeTaken, timeLeft;
-//        while (!gameOver) {
-//            beginTime = System.nanoTime();
-//            System.out.println("hi");
-//
-//            // Refresh the display
-//            // Delay timer to provide the necessary delay to meet the target rate
-//            timeTaken = System.nanoTime() - beginTime;
-//            timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  // in milliseconds
-//            if (timeLeft < 10) timeLeft = 10;   // set a minimum
-//            try {
-//                // Provides the necessary delay and also yields control so that other thread can do work.
-//                Thread.sleep(timeLeft);
-//            } catch (InterruptedException ex) {
-//            }
-//
-//        }
-//    }
+    public void gameStart() {
+        // Create a new thread
+        Thread gameThread = new Thread() {
+            // Override run() to provide the running behavior of this thread.
+            @Override
+            public void run() {
+                gameLoop();
+            }
+        };
+        // Start the thread. start() calls run(), which in turn calls gameLoop().
+        gameThread.start();
+    }
+
+
+    private void gameLoop() {
+
+        long beginTime, timeTaken, timeLeft;   // in msec
+        while (!gameOver) {
+            beginTime = System.nanoTime();
+            // Refresh the display
+
+//            boardView.repaint();
+            if(boardView.getUpdateSeq()<updateSeq%Long.MAX_VALUE){
+                System.out.println("update");
+                boardView.refreshBoard();
+                boardView.repaint();
+                boardView.setUpdateSeq(updateSeq%Long.MAX_VALUE);
+            }
+
+            // Delay timer to provide the necessary delay to meet the target rate
+            timeTaken = System.nanoTime() - beginTime;
+            timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  // in milliseconds
+
+            if (timeLeft < 10) timeLeft = 10;  // set a minimum
+            try {
+                // Provides the necessary delay and also yields control so that other thread can do work.
+                Thread.sleep(timeLeft);
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
 
 
 }
