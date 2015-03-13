@@ -13,6 +13,8 @@ public abstract class Board {
      */
     protected BoardTile[][] boardTiles;
 
+    protected boolean customized;
+
     /**
      * constructor
      */
@@ -88,6 +90,15 @@ public abstract class Board {
         for(Piece piece : blackPlayer.values()){
             piece.setTileUnderPiece(null);
         }
+    }
+
+
+    public boolean getCustomized(){
+        return customized;
+    }
+
+    public void setCustomized(boolean b){
+        customized=b;
     }
 
 

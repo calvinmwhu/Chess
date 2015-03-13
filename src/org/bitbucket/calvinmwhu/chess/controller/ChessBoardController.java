@@ -57,6 +57,8 @@ public class ChessBoardController extends JApplet {
                     setupModelAndView();
                     addMouseListenerToTiles();
                     addActionListenerToStart();
+                    addActionListenerToCustomized();
+                    addActionListenerToRestart();
                     gameStart();
                 }
             });
@@ -83,7 +85,6 @@ public class ChessBoardController extends JApplet {
         setSize(800, 800);
 
         gameModel = new Game();
-//        gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
         boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
 
         setVisible(true);
@@ -110,6 +111,7 @@ public class ChessBoardController extends JApplet {
                     gameStarted = true;
                     gameModel.setGameNews("Game Starts!");
                     gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
+
                     gameModel.updateReachableTilesForAll();
                     boardView.updatePiecesConfiguration();
                     incUpdateNews();
@@ -124,6 +126,21 @@ public class ChessBoardController extends JApplet {
             public void actionPerformed(ActionEvent e) {
                 if(!gameStarted){
                     gameModel.setCustomized(true);
+                }
+            }
+        });
+    }
+
+    private void addActionListenerToRestart(){
+        boardView.addRestartListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gameStarted){
+                    gameModel.reStart();
+                    gameModel.updateReachableTilesForAll();
+                    boardView.updatePiecesConfiguration();
+                    incUpdateNews();
+
                 }
             }
         });

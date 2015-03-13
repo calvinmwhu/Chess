@@ -49,6 +49,7 @@ public class Game {
     public void initContent(BoardShape shape) {
         if (shape == BoardShape.SQUARE) {
             chessBoard = new SquareBoard();
+            chessBoard.setCustomized(customized);
         } else {
             System.out.println("other board shape not implemented yet!");
         }
@@ -208,7 +209,7 @@ public class Game {
         return blackScore;
     }
 
-    public boolean getCusomized(){
+    public boolean getCustomized(){
         return customized;
     }
 
@@ -474,6 +475,18 @@ public class Game {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public void reStart(){
+        undoStack.clear();
+        redoStack.clear();
+        turn=Player.WHITE;
+        activePiece=null;
+        whiteScore=0;
+        blackScore=0;
+        gameNews="Game Restarts";
+        chessBoard.removeAllPiecesOnBoard(whitePlayer,blackPlayer);
+        chessBoard.putPiecesOnBoard(whitePlayer,blackPlayer);
     }
 
 }

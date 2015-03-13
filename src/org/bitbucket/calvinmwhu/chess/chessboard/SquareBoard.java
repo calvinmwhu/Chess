@@ -31,7 +31,7 @@ public class SquareBoard extends Board {
         boardTiles = new BoardTile[this.height][this.width];
         for (int rank = 0; rank < height; rank++) {
             for (int file = 0; file < width; file++) {
-                boardTiles[rank][file] = new BoardTile(rank, file,this);
+                boardTiles[rank][file] = new BoardTile(rank, file, this);
             }
         }
     }
@@ -44,13 +44,6 @@ public class SquareBoard extends Board {
         whitePlayer.get(PieceName.QUEEN.getName()).setTileUnderPiece(boardTiles[0][3]);
         blackPlayer.get(PieceName.QUEEN.getName()).setTileUnderPiece(boardTiles[7][3]);
 
-        //put Bishop
-        whitePlayer.get(PieceName.BISHOP.getName() + "0").setTileUnderPiece(boardTiles[0][2]);
-        whitePlayer.get(PieceName.BISHOP.getName() + "1").setTileUnderPiece(boardTiles[0][5]);
-        blackPlayer.get(PieceName.BISHOP.getName() + "0").setTileUnderPiece(boardTiles[7][2]);
-        blackPlayer.get(PieceName.BISHOP.getName() + "1").setTileUnderPiece(boardTiles[7][5]);
-
-
         //put Knight
         whitePlayer.get(PieceName.KNIGHT.getName() + "0").setTileUnderPiece(boardTiles[0][1]);
         whitePlayer.get(PieceName.KNIGHT.getName() + "1").setTileUnderPiece(boardTiles[0][6]);
@@ -58,11 +51,33 @@ public class SquareBoard extends Board {
         blackPlayer.get(PieceName.KNIGHT.getName() + "1").setTileUnderPiece(boardTiles[7][6]);
 
 
-        //put rook
-        whitePlayer.get(PieceName.ROOK.getName() + "0").setTileUnderPiece(boardTiles[0][0]);
-        whitePlayer.get(PieceName.ROOK.getName() + "1").setTileUnderPiece(boardTiles[0][7]);
-        blackPlayer.get(PieceName.ROOK.getName() + "0").setTileUnderPiece(boardTiles[7][0]);
-        blackPlayer.get(PieceName.ROOK.getName() + "1").setTileUnderPiece(boardTiles[7][7]);
+        if (!customized) {
+            //put Bishop
+            whitePlayer.get(PieceName.BISHOP.getName() + "0").setTileUnderPiece(boardTiles[0][2]);
+            whitePlayer.get(PieceName.BISHOP.getName() + "1").setTileUnderPiece(boardTiles[0][5]);
+            blackPlayer.get(PieceName.BISHOP.getName() + "0").setTileUnderPiece(boardTiles[7][2]);
+            blackPlayer.get(PieceName.BISHOP.getName() + "1").setTileUnderPiece(boardTiles[7][5]);
+
+
+            //put rook
+            whitePlayer.get(PieceName.ROOK.getName() + "0").setTileUnderPiece(boardTiles[0][0]);
+            whitePlayer.get(PieceName.ROOK.getName() + "1").setTileUnderPiece(boardTiles[0][7]);
+            blackPlayer.get(PieceName.ROOK.getName() + "0").setTileUnderPiece(boardTiles[7][0]);
+            blackPlayer.get(PieceName.ROOK.getName() + "1").setTileUnderPiece(boardTiles[7][7]);
+
+        } else {
+            //put empress
+            whitePlayer.get(PieceName.EMPRESS.getName() + "0").setTileUnderPiece(boardTiles[0][0]);
+            whitePlayer.get(PieceName.EMPRESS.getName() + "1").setTileUnderPiece(boardTiles[0][7]);
+            blackPlayer.get(PieceName.EMPRESS.getName() + "0").setTileUnderPiece(boardTiles[7][0]);
+            blackPlayer.get(PieceName.EMPRESS.getName() + "1").setTileUnderPiece(boardTiles[7][7]);
+
+            //put princess
+            whitePlayer.get(PieceName.PRINCESS.getName() + "0").setTileUnderPiece(boardTiles[0][2]);
+            whitePlayer.get(PieceName.PRINCESS.getName() + "1").setTileUnderPiece(boardTiles[0][5]);
+            blackPlayer.get(PieceName.PRINCESS.getName() + "0").setTileUnderPiece(boardTiles[7][2]);
+            blackPlayer.get(PieceName.PRINCESS.getName() + "1").setTileUnderPiece(boardTiles[7][5]);
+        }
 
         //put pawn
         for (int i = 0; i < 8; i++) {

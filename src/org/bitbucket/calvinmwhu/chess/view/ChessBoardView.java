@@ -322,6 +322,11 @@ public class ChessBoardView extends JPanel {
     }
 
     public void updatePiecesConfiguration() {
+        for(int rank=0; rank<height; rank++){
+            for(int file=0; file<width; file++){
+                centerLabels[rank][file].setIcon(null);
+            }
+        }
         for (Piece piece : game.getPlayers(Player.WHITE).values()) {
             addPieceToBoard(piece);
         }
