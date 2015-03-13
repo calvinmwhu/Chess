@@ -219,7 +219,6 @@ public class ChessBoardView extends JPanel {
                 imagePanels[rank][file].setBorder(null);
             }
         }
-//        updatePiecesConfiguration(game);
 
         if (activePiece != null) {
             HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
@@ -258,20 +257,6 @@ public class ChessBoardView extends JPanel {
         }
     }
 
-
-    // Override paintComponent to do custom drawing.
-    // Called back by repaint().
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);   // paint background
-
-        // Draw the game objects
-
-    }
-
-    public void refreshDisplay() {
-
-    }
 
     public int getDimensionHeight() {
         return height;

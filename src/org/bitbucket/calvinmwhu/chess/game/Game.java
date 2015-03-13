@@ -27,7 +27,7 @@ public class Game {
      */
     public Game() {
         turn = Player.WHITE;
-        activePiece=null;
+        activePiece = null;
     }
 
     /**
@@ -100,17 +100,25 @@ public class Game {
         return chessBoard;
     }
 
+    public Piece getPieceAtLocation(int rank, int file) {
+        return chessBoard.getPieceAtLocation(rank, file);
+    }
 
-    public Piece getActivePiece(){
+    public BoardTile getTileAtLocation(int rank, int file) {
+        return chessBoard.getTileAtLocation(rank, file);
+    }
+
+
+    public Piece getActivePiece() {
         return activePiece;
     }
 
-    public void setActivePiece(int rank, int file){
-        activePiece = chessBoard.getPieceAtLocation(rank,file);
+    public void setActivePiece(int rank, int file) {
+        activePiece = getPieceAtLocation(rank, file);
     }
 
-    public void setActivePiece(Piece piece){
-        activePiece=piece;
+    public void setActivePiece(Piece piece) {
+        activePiece = piece;
     }
 
     /**
@@ -123,26 +131,28 @@ public class Game {
 
 
     public boolean actionMoveTo(int toRank, int toFile) {
-        BoardTile toTile = chessBoard.getTileAtLocation(toRank, toFile);
+        BoardTile toTile = getTileAtLocation(toRank, toFile);
         if (activePiece.moveToTile(toTile)) {
-//            printConfiguration();
-
             return true;
         }
-//        printConfiguration();
 
         return false;
     }
 
     public Piece actionKillPieceAtLocation(int toRank, int toFile) {
-        Piece target = chessBoard.getPieceAtLocation(toRank, toFile);
+        Piece target = getPieceAtLocation(toRank, toFile);
         if (activePiece.killTargetPiece(target)) {
-//            printConfiguration();
             return target;
         }
-
-//        printConfiguration();
         return null;
+    }
+
+    public boolean actionClick(int toRank, int toFile) {
+        if (getPieceAtLocation(toRank, toFile) == null) {
+            return actionMoveTo(toRank, toFile);
+        } else {
+            return actionKillPieceAtLocation(toRank, toFile) != null;
+        }
     }
 
 
