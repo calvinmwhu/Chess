@@ -275,6 +275,12 @@ public class Game {
         }
 
         public boolean actionMove() {
+            if(activePiece.getName()==PieceName.KING){
+                HashMap<String, Piece> attackerPieces = (activePiece.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
+                if(playerCanKillKingAtTile(attackerPieces,toTile)){
+                    return false;
+                }
+            }
             if (activePiece.moveToTile(toTile)) {
                 return true;
             }
@@ -376,6 +382,9 @@ public class Game {
         HashMap<String, Piece> targetPieces = (player == Player.BLACK) ? blackPlayer : whitePlayer;
         Piece targetKing = targetPieces.get(PieceName.KING.getName());
         HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
+        if(checkMatePositions.size()==0){
+            return false;
+        }
         for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext(); ) {
             BoardTile tile = it.next();
             if (playerCanKillKingAtTile(attackerPieces, tile)) {
