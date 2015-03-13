@@ -111,17 +111,20 @@ public class ChessBoardController extends JApplet {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            int rank = imagePanel.getRank();
-            int file = imagePanel.getFile();
+            int toRank = imagePanel.getRank();
+            int toFile = imagePanel.getFile();
 
             if (gameStarted) {
                 if (gameModel.getActivePiece() == null) {
-                    gameModel.setActivePiece(rank, file);
+                    gameModel.setActivePiece(toRank, toFile);
+                    updateSeq = updateSeq% Long.MAX_VALUE + 1;
                 }else{
-                    
+                    if(gameModel.performAction(toRank,toFile)){
+                        gameModel.updateReachableTilesForAll();
+                        updateSeq = updateSeq% Long.MAX_VALUE + 1;
+                    }
+                    gameModel.setActivePiece(null);
                 }
-                gameModel.updateReachableTilesForAll();
-                updateSeq = updateSeq% Long.MAX_VALUE + 1;
             }
         }
     }

@@ -11,6 +11,7 @@ import org.bitbucket.calvinmwhu.chess.values.Player;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Stack;
 
 /**
  * Game backend model, for storing chessBoard, pieces, and players data.
@@ -19,6 +20,8 @@ public class Game {
     private Board chessBoard;
     private HashMap<String, Piece> whitePlayer;
     private HashMap<String, Piece> blackPlayer;
+    private Stack<GameAction> undoStack;
+    private Stack<GameAction> redoStack;
     private Player turn;
     private Piece activePiece;
 
@@ -28,6 +31,8 @@ public class Game {
     public Game() {
         turn = Player.WHITE;
         activePiece = null;
+        undoStack=new Stack<GameAction>();
+        redoStack=new Stack<GameAction>();
     }
 
     /**
@@ -130,6 +135,7 @@ public class Game {
     }
 
 
+
     public boolean actionMoveTo(int toRank, int toFile) {
         BoardTile toTile = getTileAtLocation(toRank, toFile);
         if (activePiece.moveToTile(toTile)) {
@@ -147,12 +153,108 @@ public class Game {
         return null;
     }
 
-    public boolean actionClick(int toRank, int toFile) {
+    public boolean pieceActionToPerform(int toRank, int toFile) {
         if (getPieceAtLocation(toRank, toFile) == null) {
-            return actionMoveTo(toRank, toFile);
+            boolean moveSuccess = actionMoveTo(toRank,toFile);
+            if(moveSuccess){
+                System.out.println(activePiece+" moves to ["+toRank+","+toFile+"]");
+                return true;
+            }else{
+                System.out.println(activePiece+" cannot move to ["+toRank+","+toFile+"]");
+                return false;
+            }
         } else {
-            return actionKillPieceAtLocation(toRank, toFile) != null;
+            Piece pieceKilled = actionKillPieceAtLocation(toRank, toFile);
+            if(pieceKilled!=null){
+                System.out.println(pieceKilled+" is killed by "+activePiece);
+                return true;
+            }else{
+                System.out.println(activePiece+" attempts an invalid kill!");
+                return false;
+            }
         }
+    }
+
+
+    public boolean performAction(int toRank, int toFile){
+        GameAction currAction = new GameAction(toRank,toFile);
+        boolean success = currAction.performAction();
+        if(success){
+            redoStack.push(currAction);
+        }
+        return success;
+    }
+
+    public class GameAction{
+        int toRank;
+        int toFile;
+        BoardTile currentTile=null;
+        BoardTile toTile=null;
+
+        Piece currPiece;
+        Piece pieceToKill;
+
+        HashSet<BoardTile> reachableTiles=new HashSet<BoardTile>();
+
+        public GameAction(int toRank, int toFile){
+            this.toRank=toRank;
+            this.toFile=toFile;
+            currPiece = activePiece;
+            toTile = getTileAtLocation(toRank,toFile);
+            pieceToKill = getPieceAtLocation(toRank,toFile);
+            if(activePiece!=null){
+                reachableTiles = new HashSet<BoardTile>(activePiece.getReachableTiles());
+                currentTile = activePiece.getTileUnderPiece();
+            }
+        }
+
+        public HashSet<BoardTile> getReachableTiles(){
+            return reachableTiles;
+        }
+
+        public boolean actionMove() {
+            if (activePiece.moveToTile(toTile)) {
+                return true;
+            }
+            return false;
+        }
+        public Piece actionKill() {
+            if (activePiece.killTargetPiece(pieceToKill)) {
+                return pieceToKill;
+            }
+            return null;
+        }
+
+        public boolean performAction() {
+            if (pieceToKill == null) {
+                boolean moveSuccess = actionMove();
+                if(moveSuccess){
+                    System.out.println(activePiece+" moves to ["+toRank+","+toFile+"]");
+                    return true;
+                }else{
+                    System.out.println(activePiece+" cannot move to ["+toRank+","+toFile+"]");
+                    return false;
+                }
+            } else {
+                Piece pieceKilled = actionKill();
+                if(pieceKilled!=null){
+                    System.out.println(pieceKilled+" is killed by "+activePiece);
+                    return true;
+                }else{
+                    System.out.println(activePiece+" attempts an invalid kill!");
+                    return false;
+                }
+            }
+        }
+
+        public void undoAction(){
+
+        }
+
+        public void redoAction(){
+
+        }
+
     }
 
 
