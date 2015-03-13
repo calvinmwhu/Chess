@@ -287,10 +287,19 @@ public class Game {
 
         Piece currPiece = null;
         Piece pieceToKill = null;
+        String preGameNews;
+
+        int preWhiteScore;
+        int preBlackScore;
+
+        Player preTurn;
 
         HashSet<BoardTile> reachableTiles = new HashSet<BoardTile>();
 
         public GameAction(int toRank, int toFile) {
+            preBlackScore=blackScore;
+            preWhiteScore=whiteScore;
+            preTurn=turn;
             this.toRank = toRank;
             this.toFile = toFile;
             toTile = getTileAtLocation(toRank, toFile);
@@ -350,10 +359,12 @@ public class Game {
                 boolean moveSuccess = actionMove();
                 if (moveSuccess) {
                     gameNews = activePiece + " moves to [" + toRank + "," + toFile + "]";
+                    preGameNews = new String(gameNews);
                     System.out.println(gameNews);
                     return true;
                 } else {
                     gameNews = activePiece + " cannot move to [" + toRank + "," + toFile + "]";
+                    preGameNews = new String(gameNews);
                     System.out.println(gameNews);
                     return false;
                 }
@@ -361,6 +372,7 @@ public class Game {
                 Piece pieceKilled = actionKill();
                 if (pieceKilled != null) {
                     gameNews = pieceKilled + " is killed by " + activePiece;
+                    preGameNews = new String(gameNews);
                     System.out.println(gameNews);
                     if(activePiece.getPlayer()==Player.WHITE){
                         whiteScore++;
@@ -369,6 +381,7 @@ public class Game {
                     }
                     return true;
                 } else {
+                    preGameNews = new String(gameNews);
                     gameNews = activePiece + " attempts an invalid kill!";
                     System.out.println(gameNews);
                     return false;
@@ -377,7 +390,12 @@ public class Game {
         }
 
         public void undoAction() {
+            activePiece=null;
 
+            currPiece.setTileUnderPiece(currentTile);
+            if(pieceToKill!=null){
+                pieceToKill.setTileUnderPiece(toTile);
+            }
         }
 
         public void redoAction() {

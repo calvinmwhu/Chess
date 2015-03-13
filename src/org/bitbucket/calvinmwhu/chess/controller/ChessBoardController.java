@@ -164,6 +164,20 @@ public class ChessBoardController extends JApplet {
         });
     }
 
+    private void addActionListenerToUndo(){
+        boardView.addUndoListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gameStarted){
+                    Game.GameAction undoAction = gameModel.getUndoStack().peek();
+                    undoAction.undoAction();
+                    gameModel.getRedoStack().push(undoAction);
+                    gameModel.getUndoStack().pop();
+                }
+            }
+        });
+    }
+
     public boolean checkMated(Player player){
         return gameModel.checkMate(player);
     }
