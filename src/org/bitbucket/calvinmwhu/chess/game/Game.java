@@ -327,7 +327,7 @@ public class Game {
         public boolean actionMove() {
             if(activePiece.getName()==PieceName.KING){
                 HashMap<String, Piece> attackerPieces = (activePiece.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
-                if(playerCanKillPieceAtTile(attackerPieces, toTile)){
+                if(playerCanKillPieceAtTile(attackerPieces, toTile)!=null){
                     gameNews=activePiece+"will be checked at "+toTile;
                     return false;
                 }
@@ -413,13 +413,13 @@ public class Game {
      * @param targetTile
      * @return true if the king can be checked at the given tile
      */
-    public boolean playerCanKillPieceAtTile(HashMap<String, Piece> playerPieces, BoardTile targetTile) {
+    public Piece playerCanKillPieceAtTile(HashMap<String, Piece> playerPieces, BoardTile targetTile) {
         for (Piece piece : playerPieces.values()) {
             if (piece.canKillPieceAtTile(targetTile)) {
-                return true;
+                return piece;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -441,7 +441,8 @@ public class Game {
         }
         for (Iterator<BoardTile> it = checkMatePositions.iterator(); it.hasNext(); ) {
             BoardTile tile = it.next();
-            if (playerCanKillPieceAtTile(attackerPieces, tile)) {
+            Piece killerPiece = playerCanKillPieceAtTile(attackerPieces, tile);
+            if (killerPiece!=null && playerCanKillPieceAtTile(targetPieces,killerPiece.getTileUnderPiece())==null) {
                 it.remove();
             }
         }

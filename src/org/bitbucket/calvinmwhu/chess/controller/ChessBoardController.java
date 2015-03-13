@@ -264,6 +264,8 @@ public class ChessBoardController extends JApplet {
             if (boardView.getUpdateNews() < updateNews % Long.MAX_VALUE) {
                 boardView.setGameFeedback(gameModel.getGameNews());
                 boardView.setUpdateNews(updateNews % Long.MAX_VALUE);
+                boardView.setWhiteScore(gameModel.getWhiteScore());
+                boardView.setBlackScore(gameModel.getBlackScore());
                 boardView.repaint();
             }
 
