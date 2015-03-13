@@ -278,6 +278,12 @@ public class Game {
         }
         return success;
     }
+//
+//    public void performUndoAction(){
+//        Game.GameAction undoAction = undoStack.peek();
+//        undoAction.undoAction();
+//
+//    }
 
     public class GameAction {
         int toRank;
@@ -293,6 +299,7 @@ public class Game {
         int preBlackScore;
 
         Player preTurn;
+        String[] fileLetters = {"A", "B", "C", "D", "E", "F", "G", "H"};
 
         HashSet<BoardTile> reachableTiles = new HashSet<BoardTile>();
 
@@ -304,6 +311,7 @@ public class Game {
             this.toFile = toFile;
             toTile = getTileAtLocation(toRank, toFile);
             pieceToKill = getPieceAtLocation(toRank, toFile);
+            preGameNews=new String(gameNews);
             if (activePiece != null) {
                 currPiece = activePiece;
                 reachableTiles = new HashSet<BoardTile>(activePiece.getReachableTiles());
@@ -358,13 +366,11 @@ public class Game {
             if (pieceToKill == null) {
                 boolean moveSuccess = actionMove();
                 if (moveSuccess) {
-                    gameNews = activePiece + " moves to [" + toRank + "," + toFile + "]";
-                    preGameNews = new String(gameNews);
+                    gameNews = activePiece + " moves to " + fileLetters[toFile] + (toRank+1) ;
                     System.out.println(gameNews);
                     return true;
                 } else {
-                    gameNews = activePiece + " cannot move to [" + toRank + "," + toFile + "]";
-                    preGameNews = new String(gameNews);
+                    gameNews = activePiece + " cannot move to " +fileLetters[toFile] + (toRank+1) ;
                     System.out.println(gameNews);
                     return false;
                 }
@@ -372,7 +378,6 @@ public class Game {
                 Piece pieceKilled = actionKill();
                 if (pieceKilled != null) {
                     gameNews = pieceKilled + " is killed by " + activePiece;
-                    preGameNews = new String(gameNews);
                     System.out.println(gameNews);
                     if(activePiece.getPlayer()==Player.WHITE){
                         whiteScore++;
@@ -381,7 +386,6 @@ public class Game {
                     }
                     return true;
                 } else {
-                    preGameNews = new String(gameNews);
                     gameNews = activePiece + " attempts an invalid kill!";
                     System.out.println(gameNews);
                     return false;
@@ -391,10 +395,16 @@ public class Game {
 
         public void undoAction() {
             activePiece=null;
+            gameNews = new String(preGameNews);
+            whiteScore=preWhiteScore;
+            blackScore=preBlackScore;
+            turn=preTurn;
 
             currPiece.setTileUnderPiece(currentTile);
+            System.out.println(currPiece+": "+currPiece.getTileUnderPiece());
             if(pieceToKill!=null){
                 pieceToKill.setTileUnderPiece(toTile);
+                System.out.println(pieceToKill + ": " + pieceToKill.getTileUnderPiece());
             }
         }
 

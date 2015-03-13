@@ -39,7 +39,7 @@ public class ChessBoardController extends JApplet {
     public ChessBoardController() {
         gameOver = false;
         gameStarted = false;
-        guiRunning=true;
+        guiRunning = true;
         updateSeq = 0;
         updateNews = 0;
     }
@@ -60,6 +60,8 @@ public class ChessBoardController extends JApplet {
                     addActionListenerToCustomized();
                     addActionListenerToRestart();
                     addActionListenerToForfeit();
+                    addActionListenerToUndo();
+
                     gameStart();
                 }
             });
@@ -72,11 +74,11 @@ public class ChessBoardController extends JApplet {
         return gameModel;
     }
 
-    private void incUpdateNews(){
+    private void incUpdateNews() {
         updateNews = updateNews % Long.MAX_VALUE + 1;
     }
 
-    private void incUpdateSeq(){
+    private void incUpdateSeq() {
         updateSeq = updateSeq % Long.MAX_VALUE + 1;
     }
 
@@ -121,64 +123,69 @@ public class ChessBoardController extends JApplet {
         });
     }
 
-    private void addActionListenerToCustomized(){
+    private void addActionListenerToCustomized() {
         boardView.addCustomizedListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!gameStarted){
+                if (!gameStarted) {
                     gameModel.setCustomized(true);
                 }
             }
         });
     }
 
-    private void addActionListenerToRestart(){
+    private void addActionListenerToRestart() {
         boardView.addRestartListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameOver=false;
-                gameStarted=true;
+                gameOver = false;
+                gameStarted = true;
 //                if(gameStarted){
-                    gameModel.reStart();
-                    gameModel.updateReachableTilesForAll();
-                    boardView.updatePiecesConfiguration();
-                    incUpdateNews();
+                gameModel.reStart();
+                gameModel.updateReachableTilesForAll();
+                boardView.updatePiecesConfiguration();
+                incUpdateNews();
 //                }
             }
         });
     }
 
 
-    private void addActionListenerToForfeit(){
+    private void addActionListenerToForfeit() {
         boardView.addForfeitListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(gameStarted){
-                    gameOver=true;
-                    gameStarted=false;
-                    winner=(gameModel.getTurn()==Player.BLACK)? Player.WHITE:Player.BLACK;
-                    gameModel.setGameNews("Game over, "+winner.getColor()+" wins because "+gameModel.getTurn().getColor()+" forfeits");
+                if (gameStarted) {
+                    gameOver = true;
+                    gameStarted = false;
+                    winner = (gameModel.getTurn() == Player.BLACK) ? Player.WHITE : Player.BLACK;
+                    gameModel.setGameNews("Game over, " + winner.getColor() + " wins because " + gameModel.getTurn().getColor() + " forfeits");
                     incUpdateNews();
                 }
             }
         });
     }
 
-    private void addActionListenerToUndo(){
+    private void addActionListenerToUndo() {
         boardView.addUndoListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(gameStarted){
-                    Game.GameAction undoAction = gameModel.getUndoStack().peek();
-                    undoAction.undoAction();
-                    gameModel.getRedoStack().push(undoAction);
-                    gameModel.getUndoStack().pop();
+                if (gameStarted) {
+                    if (gameModel.getUndoStack().size() > 0) {
+                        Game.GameAction undoAction = gameModel.getUndoStack().peek();
+                        undoAction.undoAction();
+                        boardView.undoView();
+                        gameModel.getRedoStack().push(undoAction);
+                        gameModel.getUndoStack().pop();
+                        gameModel.updateReachableTilesForAll();
+                        incUpdateNews();
+                    }
                 }
             }
         });
     }
 
-    public boolean checkMated(Player player){
+    public boolean checkMated(Player player) {
         return gameModel.checkMate(player);
     }
 
@@ -196,13 +203,13 @@ public class ChessBoardController extends JApplet {
             int toFile = imagePanel.getFile();
 
             Player currTurn = gameModel.getTurn();
-            if(checkMated(currTurn)){
+            if (checkMated(currTurn)) {
                 gameOver = true;
-                winner=(currTurn==Player.BLACK)? Player.WHITE:Player.BLACK;
+                winner = (currTurn == Player.BLACK) ? Player.WHITE : Player.BLACK;
             }
 
             if (gameOver) {
-                gameModel.setGameNews("Game over, "+winner.getColor()+" wins");
+                gameModel.setGameNews("Game over, " + winner.getColor() + " wins");
                 incUpdateNews();
                 return;
             }
@@ -212,7 +219,7 @@ public class ChessBoardController extends JApplet {
                 Piece activePiece = gameModel.getActivePiece();
                 if (activePiece == null) {
                     Piece pieceToGet = gameModel.getPieceAtLocation(toRank, toFile);
-                    if (pieceToGet!=null && pieceToGet.getPlayer() != gameModel.getTurn()) {
+                    if (pieceToGet != null && pieceToGet.getPlayer() != gameModel.getTurn()) {
                         gameModel.setGameNews("It's " + gameModel.getTurn().getColor() + "'s turn!");
                         incUpdateNews();
                         return;
@@ -224,9 +231,9 @@ public class ChessBoardController extends JApplet {
                         gameModel.updateReachableTilesForAll();
 
                         //check king:
-                        Player target = activePiece.getPlayer()==Player.WHITE? Player.BLACK:Player.WHITE;
-                        if(gameModel.checkKing(target)){
-                            gameModel.setGameNews(" checks " + target.getColor()+"'s king!");
+                        Player target = activePiece.getPlayer() == Player.WHITE ? Player.BLACK : Player.WHITE;
+                        if (gameModel.checkKing(target)) {
+                            gameModel.setGameNews(" checks " + target.getColor() + "'s king!");
                             System.out.println(gameModel.getGameNews());
                         }
 

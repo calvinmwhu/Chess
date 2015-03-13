@@ -56,8 +56,8 @@ public class ChessBoardView extends JPanel {
     public ChessBoardView(ChessBoardController controller, int height, int width) {
         this.height = height;
         this.width = width;
-        whiteScore=new TextField();
-        blackScore=new TextField();
+        whiteScore = new TextField();
+        blackScore = new TextField();
         gameFeedback = new JLabel();
         centerPanel = new JPanel();
         southPanel = new JPanel();
@@ -83,20 +83,23 @@ public class ChessBoardView extends JPanel {
     }
 
 
-    public void setGameFeedback(String feedback){
+    public void setGameFeedback(String feedback) {
         gameFeedback.setText(feedback);
     }
 
     public void setUpdateSeq(long seq) {
         updateSeq = seq;
     }
+
     public void setUpdateNews(long seq) {
         updateNews = seq;
     }
-    public void setWhiteScore(int score){
+
+    public void setWhiteScore(int score) {
         whiteScore.setText(String.valueOf(score));
     }
-    public void setBlackScore(int score){
+
+    public void setBlackScore(int score) {
         blackScore.setText(String.valueOf(score));
     }
 
@@ -148,12 +151,12 @@ public class ChessBoardView extends JPanel {
             panels[i] = new JPanel(new FlowLayout());
             JLabel name;
             TextField temp;
-            if(i==0){
-                name = new JLabel("White"+ "'s score");
-                temp=whiteScore;
-            }else{
-                name = new JLabel("Black"+ "'s score");
-                temp=blackScore;
+            if (i == 0) {
+                name = new JLabel("White" + "'s score");
+                temp = whiteScore;
+            } else {
+                name = new JLabel("Black" + "'s score");
+                temp = blackScore;
             }
             panels[i].add(name);
             panels[i].add(temp);
@@ -260,14 +263,13 @@ public class ChessBoardView extends JPanel {
         }
     }
 
-    public void deHighlightReachableTiles(HashSet<BoardTile> reachableTiles){
+    public void deHighlightReachableTiles(HashSet<BoardTile> reachableTiles) {
         Iterator<BoardTile> it = reachableTiles.iterator();
         while (it.hasNext()) {
             BoardTile tile = it.next();
             deHighLightPanel(tile.getRankPos(), tile.getFilePos());
         }
     }
-
 
 
     public void updateViewUIAfterChangeInGameModel() {
@@ -290,17 +292,17 @@ public class ChessBoardView extends JPanel {
             killedPiece = preAction.getPieceToKill();
             originTile = preAction.getCurrentTile();
             desTile = preAction.getDestinationTile();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println(e.getMessage());
         }
 
         String imageName = previousPiece.getPieceNameWithoutIndex();
         ImageIcon img = pieceImages.get(imageName);
-        if(killedPiece==null){
+        if (killedPiece == null) {
             //the operation performed is a move
             centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(null);
             centerLabels[desTile.getRankPos()][desTile.getFilePos()].setIcon(img);
-        }else{
+        } else {
             //the operation performed is a kill
             centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(null);
             centerLabels[desTile.getRankPos()][desTile.getFilePos()].setIcon(img);
@@ -321,9 +323,60 @@ public class ChessBoardView extends JPanel {
         }
     }
 
+
+
+
+    public void updateViewForUndo() {
+        Game.GameAction preAction = null;
+        Piece currPiece = null;
+        Piece killedPiece = null;
+        BoardTile originTile = null;
+        BoardTile currTile = null;
+
+        try {
+            preAction = game.getUndoStack().peek();
+
+        } catch (EmptyStackException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            currPiece = preAction.getCurrPiece();
+            killedPiece = preAction.getPieceToKill();
+            originTile = preAction.getCurrentTile();
+            currTile = preAction.getDestinationTile();
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String imageName = currPiece.getPieceNameWithoutIndex();
+        ImageIcon img = pieceImages.get(imageName);
+        centerLabels[currTile.getRankPos()][currTile.getFilePos()].setIcon(null);
+        centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(img);
+
+        if(killedPiece!=null){    //the operation performed is a kill
+            String imageNameKilled = killedPiece.getPieceNameWithoutIndex();
+            ImageIcon imageKilled = pieceImages.get(imageNameKilled);
+            centerLabels[currTile.getRankPos()][currTile.getFilePos()].setIcon(imageKilled);
+        }
+    }
+
+    public void undoView() {
+        for (int rank = 0; rank < height; rank++) {
+            for (int file = 0; file < width; file++) {
+                imagePanels[rank][file].setBorder(null);
+            }
+        }
+        updateViewForUndo();
+    }
+
+
+
+
+
     public void updatePiecesConfiguration() {
-        for(int rank=0; rank<height; rank++){
-            for(int file=0; file<width; file++){
+        for (int rank = 0; rank < height; rank++) {
+            for (int file = 0; file < width; file++) {
                 centerLabels[rank][file].setIcon(null);
             }
         }
