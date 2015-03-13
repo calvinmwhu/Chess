@@ -56,7 +56,7 @@ public class King extends Piece {
         return neighbours;
     }
 
-    public boolean canKillKingAtTile(BoardTile toTile) {
+    public boolean canKillPieceAtTile(BoardTile toTile) {
         if(removedFromBoard()) return false;
         int rank = getRank();
         int file = getFile();

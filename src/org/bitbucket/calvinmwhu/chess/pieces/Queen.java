@@ -37,7 +37,7 @@ public class Queen extends Piece {
         reachableTiles.addAll(tiles);
     }
 
-    public boolean canKillKingAtTile(BoardTile toTile) {
+    public boolean canKillPieceAtTile(BoardTile toTile) {
         if (removedFromBoard() || toTile==tileUnderPiece) return false;
         int rank = getRank();
         int file = getFile();

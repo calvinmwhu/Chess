@@ -59,6 +59,7 @@ public class ChessBoardController extends JApplet {
                     addActionListenerToStart();
                     addActionListenerToCustomized();
                     addActionListenerToRestart();
+                    addActionListenerToForfeit();
                     gameStart();
                 }
             });
@@ -135,12 +136,29 @@ public class ChessBoardController extends JApplet {
         boardView.addRestartListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(gameStarted){
+                gameOver=false;
+                gameStarted=true;
+//                if(gameStarted){
                     gameModel.reStart();
                     gameModel.updateReachableTilesForAll();
                     boardView.updatePiecesConfiguration();
                     incUpdateNews();
+//                }
+            }
+        });
+    }
 
+
+    private void addActionListenerToForfeit(){
+        boardView.addForfeitListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gameStarted){
+                    gameOver=true;
+                    gameStarted=false;
+                    winner=(gameModel.getTurn()==Player.BLACK)? Player.WHITE:Player.BLACK;
+                    gameModel.setGameNews("Game over, "+winner.getColor()+" wins because "+gameModel.getTurn().getColor()+" forfeits");
+                    incUpdateNews();
                 }
             }
         });

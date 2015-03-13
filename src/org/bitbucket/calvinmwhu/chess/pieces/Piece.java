@@ -170,7 +170,7 @@ public abstract class Piece {
      * @param toTile
      * @return true if the toTile is reachable by the piece
      */
-    public abstract boolean canKillKingAtTile(BoardTile toTile);
+    public abstract boolean canKillPieceAtTile(BoardTile toTile);
 
 
     @Override
