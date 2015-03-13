@@ -27,7 +27,7 @@ public class Game {
     private int whiteScore;
     private int blackScore;
     private String gameNews;
-
+    private boolean customized;
     /**
      * constructor, creates an empty game, gives the turn to white player
      */
@@ -38,6 +38,7 @@ public class Game {
         redoStack = new Stack<GameAction>();
         whiteScore = 0;
         blackScore = 0;
+        customized=false;
     }
 
     /**
@@ -51,7 +52,12 @@ public class Game {
         } else {
             System.out.println("other board shape not implemented yet!");
         }
-        setUpPieces();
+        if(!customized){
+            setUpPieces();
+        }
+        else{
+            setUpCustomizedPieces();
+        }
     }
 
     /**
@@ -100,6 +106,41 @@ public class Game {
             }
         }
     }
+
+    void setUpCustomizedPieces() {
+        whitePlayer = new HashMap<String, Piece>();
+        blackPlayer = new HashMap<String, Piece>();
+        for (PieceName pieceName : PieceName.values()) {
+            if (pieceName == PieceName.PAWN) {
+                for (int i = 0; i < 8; i++) {
+                    whitePlayer.put(pieceName.getName() + String.valueOf(i), new Pawn(chessBoard, Player.WHITE, i));
+                    blackPlayer.put(pieceName.getName() + String.valueOf(i), new Pawn(chessBoard, Player.BLACK, i));
+                }
+            } else if (pieceName == PieceName.EMPRESS) {
+                for (int i = 0; i < 2; i++) {
+                    whitePlayer.put(pieceName.getName() + String.valueOf(i), new Empress(chessBoard, Player.WHITE, i));
+                    blackPlayer.put(pieceName.getName() + String.valueOf(i), new Empress(chessBoard, Player.BLACK, i));
+                }
+            } else if (pieceName == PieceName.PRINCESS) {
+                for (int i = 0; i < 2; i++) {
+                    whitePlayer.put(pieceName.getName() + String.valueOf(i), new Princess(chessBoard, Player.WHITE, i));
+                    blackPlayer.put(pieceName.getName() + String.valueOf(i), new Princess(chessBoard, Player.BLACK, i));
+                }
+            } else if (pieceName == PieceName.KNIGHT) {
+                for (int i = 0; i < 2; i++) {
+                    whitePlayer.put(pieceName.getName() + String.valueOf(i), new Knight(chessBoard, Player.WHITE, i));
+                    blackPlayer.put(pieceName.getName() + String.valueOf(i), new Knight(chessBoard, Player.BLACK, i));
+                }
+            } else if (pieceName == PieceName.KING) {
+                whitePlayer.put(pieceName.getName(), new King(chessBoard, Player.WHITE));
+                blackPlayer.put(pieceName.getName(), new King(chessBoard, Player.BLACK));
+            } else {
+                whitePlayer.put(pieceName.getName(), new Queen(chessBoard, Player.WHITE));
+                blackPlayer.put(pieceName.getName(), new Queen(chessBoard, Player.BLACK));
+            }
+        }
+    }
+
 
     /**
      * return the game's chessBoard
@@ -165,6 +206,14 @@ public class Game {
 
     public int getBlackScore(){
         return blackScore;
+    }
+
+    public boolean getCusomized(){
+        return customized;
+    }
+
+    public void setCustomized(boolean b){
+        customized=b;
     }
 
     /**
@@ -278,6 +327,7 @@ public class Game {
             if(activePiece.getName()==PieceName.KING){
                 HashMap<String, Piece> attackerPieces = (activePiece.getPlayer() == Player.WHITE) ? blackPlayer : whitePlayer;
                 if(playerCanKillKingAtTile(attackerPieces,toTile)){
+                    gameNews=activePiece+"will be checked at "+toTile;
                     return false;
                 }
             }
@@ -381,6 +431,9 @@ public class Game {
         HashMap<String, Piece> attackerPieces = (player == Player.WHITE) ? blackPlayer : whitePlayer;
         HashMap<String, Piece> targetPieces = (player == Player.BLACK) ? blackPlayer : whitePlayer;
         Piece targetKing = targetPieces.get(PieceName.KING.getName());
+        if(targetKing.removedFromBoard()){
+            return true;
+        }
         HashSet<BoardTile> checkMatePositions = targetKing.neighbours();
         if(checkMatePositions.size()==0){
             return false;

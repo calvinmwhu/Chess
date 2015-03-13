@@ -35,6 +35,7 @@ public class ChessBoardController extends JApplet {
     private Player winner = null;
     private boolean guiRunning;
 
+
     public ChessBoardController() {
         gameOver = false;
         gameStarted = false;
@@ -82,11 +83,9 @@ public class ChessBoardController extends JApplet {
         setSize(800, 800);
 
         gameModel = new Game();
-        gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
-//        gameModel.updateReachableTilesForAll();
+//        gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
         boardView = new ChessBoardView(this, BoardDimension.SQUARE.getHeight(), BoardDimension.SQUARE.getWidth());
 
-//        boardView.updatePiecesConfiguration();
         setVisible(true);
     }
 
@@ -110,9 +109,21 @@ public class ChessBoardController extends JApplet {
                 if (!gameStarted) {
                     gameStarted = true;
                     gameModel.setGameNews("Game Starts!");
-                    incUpdateNews();
+                    gameModel.setUpBoardAndPieces(BoardShape.SQUARE);
                     gameModel.updateReachableTilesForAll();
                     boardView.updatePiecesConfiguration();
+                    incUpdateNews();
+                }
+            }
+        });
+    }
+
+    private void addActionListenerToCustomized(){
+        boardView.addCustomizedListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!gameStarted){
+                    gameModel.setCustomized(true);
                 }
             }
         });
@@ -151,33 +162,37 @@ public class ChessBoardController extends JApplet {
             if (gameStarted) {
                 Piece activePiece = gameModel.getActivePiece();
                 if (activePiece == null) {
-                    if (gameModel.getPieceAtLocation(toRank, toFile).getPlayer() != gameModel.getTurn()) {
+                    Piece pieceToGet = gameModel.getPieceAtLocation(toRank, toFile);
+                    if (pieceToGet!=null && pieceToGet.getPlayer() != gameModel.getTurn()) {
                         gameModel.setGameNews("It's " + gameModel.getTurn().getColor() + "'s turn!");
-//                        updateNews = updateNews % Long.MAX_VALUE + 1;
                         incUpdateNews();
                         return;
                     }
                     gameModel.setActivePiece(toRank, toFile);
-//                    updateSeq = updateSeq % Long.MAX_VALUE + 1;
                     incUpdateSeq();
                 } else {
                     if (gameModel.performAction(toRank, toFile)) {
                         gameModel.updateReachableTilesForAll();
+
+                        //check king:
+                        Player target = activePiece.getPlayer()==Player.WHITE? Player.BLACK:Player.WHITE;
+                        if(gameModel.checkKing(target)){
+                            gameModel.setGameNews(" checks " + target.getColor()+"'s king!");
+                            System.out.println(gameModel.getGameNews());
+                        }
+
                         gameModel.setActivePiece(null);
                         gameModel.flipTurn();
-//                        updateSeq = updateSeq % Long.MAX_VALUE + 1;
                         incUpdateSeq();
                     } else {
                         Piece desPiece = gameModel.getPieceAtLocation(toRank, toFile);
                         if (activePiece.isFriendPiece(desPiece)) {
-//                            updateSeq = updateSeq % Long.MAX_VALUE + 1;
                             incUpdateSeq();
                             gameModel.setActivePiece(desPiece);
                         }
                     }
                 }
             }
-//            updateNews = updateNews % Long.MAX_VALUE + 1;
             incUpdateNews();
         }
     }

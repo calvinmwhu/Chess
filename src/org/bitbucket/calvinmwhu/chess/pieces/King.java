@@ -39,6 +39,7 @@ public class King extends Piece {
 
     public HashSet<BoardTile> neighbours() {
         HashSet<BoardTile> neighbours = new HashSet<BoardTile>();
+        if(removedFromBoard()) return neighbours;
         int rank = getRank();
         int file = getFile();
         for (int i = -1; i <= 1; i++) {
@@ -70,7 +71,6 @@ public class King extends Piece {
                 }
             }
         }
-
         return false;
     }
 

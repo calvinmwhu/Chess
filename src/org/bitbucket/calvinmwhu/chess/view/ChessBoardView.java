@@ -401,6 +401,15 @@ public class ChessBoardView extends JPanel {
         }
     }
 
+    public void addCustomizedListener(ActionListener a) {
+        try {
+            customized.addActionListener(a);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+
     public void addMouthActionListener(int rank, int file, MouseAdapter m) {
         try {
             imagePanels[rank][file].addMouseListener(m);
