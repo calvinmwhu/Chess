@@ -126,6 +126,14 @@ public class Game {
         activePiece = piece;
     }
 
+    public Stack<GameAction> getUndoStack(){
+        return undoStack;
+    }
+
+    public Stack<GameAction> getRedoStack(){
+        return redoStack;
+    }
+
     /**
      * @param player
      * @return player of either white or black color
@@ -180,7 +188,7 @@ public class Game {
         GameAction currAction = new GameAction(toRank,toFile);
         boolean success = currAction.performAction();
         if(success){
-            redoStack.push(currAction);
+            undoStack.push(currAction);
         }
         return success;
     }
@@ -191,25 +199,43 @@ public class Game {
         BoardTile currentTile=null;
         BoardTile toTile=null;
 
-        Piece currPiece;
-        Piece pieceToKill;
+        Piece currPiece=null;
+        Piece pieceToKill=null;
 
         HashSet<BoardTile> reachableTiles=new HashSet<BoardTile>();
 
         public GameAction(int toRank, int toFile){
             this.toRank=toRank;
             this.toFile=toFile;
-            currPiece = activePiece;
             toTile = getTileAtLocation(toRank,toFile);
             pieceToKill = getPieceAtLocation(toRank,toFile);
             if(activePiece!=null){
+                currPiece = activePiece;
                 reachableTiles = new HashSet<BoardTile>(activePiece.getReachableTiles());
                 currentTile = activePiece.getTileUnderPiece();
+            }else{
+                throw new NullPointerException() ;
             }
         }
 
-        public HashSet<BoardTile> getReachableTiles(){
+        public HashSet<BoardTile> getCurrReachableTiles(){
             return reachableTiles;
+        }
+
+        public Piece getCurrPiece(){
+            return currPiece;
+        }
+
+        public Piece getPieceToKill(){
+            return pieceToKill;
+        }
+
+        public BoardTile getCurrentTile(){
+            return currentTile;
+        }
+
+        public BoardTile getDestinationTile(){
+            return toTile;
         }
 
         public boolean actionMove() {

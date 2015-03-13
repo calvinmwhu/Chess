@@ -1,5 +1,6 @@
 package org.bitbucket.calvinmwhu.chess.view;
 
+import org.bitbucket.calvinmwhu.chess.chessboard.Board;
 import org.bitbucket.calvinmwhu.chess.chessboard.BoardTile;
 import org.bitbucket.calvinmwhu.chess.controller.ChessBoardController;
 import org.bitbucket.calvinmwhu.chess.game.Game;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -67,11 +69,11 @@ public class ChessBoardView extends JPanel {
         setUpChessBoardUI(controller);
     }
 
-    public long getUpdateSeq(){
+    public long getUpdateSeq() {
         return updateSeq;
     }
 
-    public void setUpdateSeq(long seq){
+    public void setUpdateSeq(long seq) {
         updateSeq = seq;
     }
 
@@ -96,14 +98,6 @@ public class ChessBoardView extends JPanel {
     }
 
     private void setUpChessBoardUI(ChessBoardController controller) {
-        //the commented out code is for setting up without using a java applet
-//        setTitle("CS242 Chess Game");
-//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        setLayout(new BorderLayout());
-//        setSize(800, 800);
-//        setLocationRelativeTo(null);
-//        constructContentPane(getContentPane());
-//        setVisible(true);
         constructContentPane(controller.getContentPane());
     }
 
@@ -203,7 +197,6 @@ public class ChessBoardView extends JPanel {
         try {
             imagePanel = imagePanels[rank][file];
             imagePanel.setBorder(redBorder);
-//            System.out.println(imagePanel.getBorder());
         } catch (IndexOutOfBoundsException e) {
             System.err.println(e.getMessage());
         } catch (NullPointerException e) {
@@ -211,24 +204,93 @@ public class ChessBoardView extends JPanel {
         }
     }
 
-    public void refreshBoard() {
-        Piece activePiece = game.getActivePiece();
-        for (int rank = 0; rank < height; rank++) {
-            for (int file = 0; file < width; file++) {
-//                centerLabels[rank][file].setIcon(null);
-                imagePanels[rank][file].setBorder(null);
-            }
+    public void deHighLightPanel(int rank, int file) {
+        ImagePanel imagePanel;
+        try {
+            imagePanel = imagePanels[rank][file];
+            imagePanel.setBorder(null);
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println(e.getMessage());
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void highlightReachableTiles(Piece activePiece) {
+        HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
+        System.out.println(reachableTiles);
+        Iterator<BoardTile> it = reachableTiles.iterator();
+        while (it.hasNext()) {
+            BoardTile tile = it.next();
+            highLightPanel(tile.getRankPos(), tile.getFilePos());
+        }
+    }
+
+    public void deHighlightReachableTiles(HashSet<BoardTile> reachableTiles){
+        Iterator<BoardTile> it = reachableTiles.iterator();
+        while (it.hasNext()) {
+            BoardTile tile = it.next();
+            deHighLightPanel(tile.getRankPos(), tile.getFilePos());
+        }
+    }
+
+
+    public void updateViewUIAfterChangeInGameModel() {
+        Game.GameAction preAction = null;
+        Piece previousPiece = null;
+        Piece killedPiece = null;
+        BoardTile originTile = null;
+        BoardTile desTile = null;
+        HashSet<BoardTile> preReachableTiles = null;
+
+        try {
+            preAction = game.getUndoStack().peek();
+
+        } catch (EmptyStackException e) {
+            System.err.println(e.getMessage());
         }
 
-        if (activePiece != null) {
-            HashSet<BoardTile> reachableTiles = activePiece.getReachableTiles();
-            System.out.println(reachableTiles);
-            Iterator<BoardTile> it = reachableTiles.iterator();
-            while (it.hasNext()) {
-                BoardTile tile = it.next();
-                highLightPanel(tile.getRankPos(), tile.getFilePos());
-            }
+        try {
+            previousPiece = preAction.getCurrPiece();
+            killedPiece = preAction.getPieceToKill();
+            originTile = preAction.getCurrentTile();
+            desTile = preAction.getDestinationTile();
+            preReachableTiles = preAction.getCurrReachableTiles();
+        }catch (NullPointerException e){
+            System.err.println(e.getMessage());
         }
+        /**
+         * the operation performed is a move
+         */
+        if(killedPiece==null){
+            String imageName = previousPiece.getPieceNameWithoutIndex();
+            ImageIcon img = pieceImages.get(imageName);
+            System.out.println(originTile);
+            System.out.println(desTile);
+            centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(null);
+            centerLabels[desTile.getRankPos()][desTile.getFilePos()].setIcon(img);
+        }
+
+        deHighlightReachableTiles(preReachableTiles);
+
+
+    }
+
+    public void refreshBoard() {
+        Piece activePiece = game.getActivePiece();
+        if (activePiece != null) {
+            highlightReachableTiles(activePiece);
+        } else {
+            updateViewUIAfterChangeInGameModel();
+        }
+
+//        for (int rank = 0; rank < height; rank++) {
+//            for (int file = 0; file < width; file++) {
+////                centerLabels[rank][file].setIcon(null);
+//                imagePanels[rank][file].setBorder(null);
+//            }
+//        }
+
     }
 
     public void updatePiecesConfiguration() {

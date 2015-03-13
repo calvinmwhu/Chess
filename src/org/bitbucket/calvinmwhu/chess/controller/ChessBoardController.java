@@ -122,8 +122,8 @@ public class ChessBoardController extends JApplet {
                     if(gameModel.performAction(toRank,toFile)){
                         gameModel.updateReachableTilesForAll();
                         updateSeq = updateSeq% Long.MAX_VALUE + 1;
+                        gameModel.setActivePiece(null);
                     }
-                    gameModel.setActivePiece(null);
                 }
             }
         }
@@ -131,7 +131,6 @@ public class ChessBoardController extends JApplet {
 
 
     public void gameStart() {
-        // Create a new thread
         Thread gameThread = new Thread() {
             @Override
             public void run() {

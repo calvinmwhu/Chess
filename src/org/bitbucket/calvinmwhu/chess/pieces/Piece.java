@@ -34,6 +34,10 @@ public abstract class Piece {
         return player;
     }
 
+    public String getPieceNameWithoutIndex(){
+        return this.player.getColor()+this.name.getName();
+    }
+
     public BoardTile getTileUnderPiece() {
         return tileUnderPiece;
     }
