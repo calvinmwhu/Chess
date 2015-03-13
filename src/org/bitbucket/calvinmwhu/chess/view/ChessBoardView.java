@@ -27,7 +27,9 @@ import java.util.Iterator;
 public class ChessBoardView extends JPanel {
     private final int height;
     private final int width;
-    private TextField[] scores;
+    private JLabel gameFeedback;
+    private TextField whiteScore;
+    private TextField blackScore;
     private JPanel centerPanel;
     private JPanel southPanel;
     private JPanel northPanel;
@@ -40,7 +42,7 @@ public class ChessBoardView extends JPanel {
     private JButton forfeit = new JButton("Forfeit");
     private JButton undo = new JButton("Undo");
     private JButton redo = new JButton("Redo");
-    private JButton Customized = new JButton("Customized");
+    private JButton customized = new JButton("Customized");
 
     private Image whiteTile;
     private Image blackTile;
@@ -49,12 +51,14 @@ public class ChessBoardView extends JPanel {
     private ImagePanel[][] imagePanels;
     private Game game;
     long updateSeq;
-
+    long updateNews;
 
     public ChessBoardView(ChessBoardController controller, int height, int width) {
         this.height = height;
         this.width = width;
-        this.scores = new TextField[2];
+        whiteScore=new TextField();
+        blackScore=new TextField();
+        gameFeedback = new JLabel();
         centerPanel = new JPanel();
         southPanel = new JPanel();
         northPanel = new JPanel();
@@ -64,6 +68,7 @@ public class ChessBoardView extends JPanel {
         imagePanels = new ImagePanel[this.height][this.width];
         game = controller.getGameModel();
         updateSeq = 0;
+        updateNews = 0;
 
         loadPieceImages();
         setUpChessBoardUI(controller);
@@ -73,9 +78,28 @@ public class ChessBoardView extends JPanel {
         return updateSeq;
     }
 
+    public long getUpdateNews() {
+        return updateNews;
+    }
+
+
+    public void setGameFeedback(String feedback){
+        gameFeedback.setText(feedback);
+    }
+
     public void setUpdateSeq(long seq) {
         updateSeq = seq;
     }
+    public void setUpdateNews(long seq) {
+        updateNews = seq;
+    }
+    public void setWhiteScore(int score){
+        whiteScore.setText(String.valueOf(score));
+    }
+    public void setBlackScore(int score){
+        blackScore.setText(String.valueOf(score));
+    }
+
 
     private void loadPieceImages() {
         for (Player player : Player.values()) {
@@ -118,30 +142,40 @@ public class ChessBoardView extends JPanel {
 
     private void constructNorthPanel() {
         GridLayout gridLayout = new GridLayout(0, 2);
-        northPanel.setLayout(gridLayout);
+        northPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JPanel[] panels = new JPanel[2];
         for (int i = 0; i < panels.length; i++) {
             panels[i] = new JPanel(new FlowLayout());
-            JLabel name = new JLabel("Player_" + i + "'s score");
-            scores[i] = new TextField("");
+            JLabel name;
+            TextField temp;
+            if(i==0){
+                name = new JLabel("White"+ "'s score");
+                temp=whiteScore;
+            }else{
+                name = new JLabel("Black"+ "'s score");
+                temp=blackScore;
+            }
             panels[i].add(name);
-            panels[i].add(scores[i]);
+            panels[i].add(temp);
             northPanel.add(panels[i]);
         }
+        gameFeedback.setText("Game not started");
+        northPanel.add(Box.createHorizontalStrut(60));
+        northPanel.add(gameFeedback);
     }
 
     private void constructEastPanel() {
-        eastPanel.setLayout(new GridLayout(5, 0));
+        eastPanel.setLayout(new GridLayout(6, 0));
         eastPanel.add(start);
         eastPanel.add(restart);
         eastPanel.add(forfeit);
         eastPanel.add(undo);
         eastPanel.add(redo);
+        eastPanel.add(customized);
     }
 
     private void constructWestPanel() {
         GridLayout gridLayout = new GridLayout(this.height, 0);
-
         westPanel.setLayout(gridLayout);
         JLabel[] labels = new JLabel[8];
         for (int i = 0; i < this.height; i++) {
@@ -235,6 +269,7 @@ public class ChessBoardView extends JPanel {
     }
 
 
+
     public void updateViewUIAfterChangeInGameModel() {
         Game.GameAction preAction = null;
         Piece previousPiece = null;
@@ -255,42 +290,35 @@ public class ChessBoardView extends JPanel {
             killedPiece = preAction.getPieceToKill();
             originTile = preAction.getCurrentTile();
             desTile = preAction.getDestinationTile();
-            preReachableTiles = preAction.getCurrReachableTiles();
         }catch (NullPointerException e){
             System.err.println(e.getMessage());
         }
-        /**
-         * the operation performed is a move
-         */
+
+        String imageName = previousPiece.getPieceNameWithoutIndex();
+        ImageIcon img = pieceImages.get(imageName);
         if(killedPiece==null){
-            String imageName = previousPiece.getPieceNameWithoutIndex();
-            ImageIcon img = pieceImages.get(imageName);
-            System.out.println(originTile);
-            System.out.println(desTile);
+            //the operation performed is a move
+            centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(null);
+            centerLabels[desTile.getRankPos()][desTile.getFilePos()].setIcon(img);
+        }else{
+            //the operation performed is a kill
             centerLabels[originTile.getRankPos()][originTile.getFilePos()].setIcon(null);
             centerLabels[desTile.getRankPos()][desTile.getFilePos()].setIcon(img);
         }
-
-        deHighlightReachableTiles(preReachableTiles);
-
-
     }
 
     public void refreshBoard() {
+        for (int rank = 0; rank < height; rank++) {
+            for (int file = 0; file < width; file++) {
+                imagePanels[rank][file].setBorder(null);
+            }
+        }
         Piece activePiece = game.getActivePiece();
         if (activePiece != null) {
             highlightReachableTiles(activePiece);
         } else {
             updateViewUIAfterChangeInGameModel();
         }
-
-//        for (int rank = 0; rank < height; rank++) {
-//            for (int file = 0; file < width; file++) {
-////                centerLabels[rank][file].setIcon(null);
-//                imagePanels[rank][file].setBorder(null);
-//            }
-//        }
-
     }
 
     public void updatePiecesConfiguration() {

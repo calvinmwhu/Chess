@@ -35,7 +35,7 @@ public class Pawn extends Piece {
         if (tile1 != null && tile1.getPlayerAtTile() == Player.UNOCCUPIED) {
             reachableTiles.add(tile1);
         }
-        if (board.pawnStartPosition(this) && tile2 != null && tile2.getPlayerAtTile() == Player.UNOCCUPIED) {
+        if (board.pawnStartPosition(this) && tile2 != null && tile2.getPlayerAtTile() == Player.UNOCCUPIED && tile1!=null && tile1.getPlayerAtTile() == Player.UNOCCUPIED) {
             reachableTiles.add(tile2);
         }
         if (tile3 != null && tile3.getPlayerAtTile() != player && tile3.getPlayerAtTile() != Player.UNOCCUPIED) {

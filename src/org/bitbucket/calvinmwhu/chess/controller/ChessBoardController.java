@@ -27,13 +27,15 @@ public class ChessBoardController extends JApplet {
     private boolean gameOver;
     private boolean gameStarted;
     private long updateSeq;
-    static final int UPDATES_PER_SEC = 30;    // number of game update per second
+    private long updateNews;
+    static final int UPDATES_PER_SEC = 45;    // number of game update per second
     static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  // nanoseconds
 
     public ChessBoardController() {
         gameOver = false;
         gameStarted = false;
         updateSeq=0;
+        updateNews=0;
     }
 
     public ChessBoardView getBoardView() {
@@ -115,17 +117,32 @@ public class ChessBoardController extends JApplet {
             int toFile = imagePanel.getFile();
 
             if (gameStarted) {
-                if (gameModel.getActivePiece() == null) {
+                Piece activePiece = gameModel.getActivePiece();
+                if (activePiece == null) {
+                    if(gameModel.getPieceAtLocation(toRank,toFile).getPlayer()!=gameModel.getTurn()){
+                        gameModel.setGameNews("It's " + gameModel.getTurn().getColor() + "'s turn!");
+                        updateNews = updateNews% Long.MAX_VALUE + 1;
+//                        System.out.println("It's " + gameModel.getTurn().getColor() + "'s turn!");
+                        return;
+                    }
                     gameModel.setActivePiece(toRank, toFile);
                     updateSeq = updateSeq% Long.MAX_VALUE + 1;
                 }else{
                     if(gameModel.performAction(toRank,toFile)){
                         gameModel.updateReachableTilesForAll();
-                        updateSeq = updateSeq% Long.MAX_VALUE + 1;
                         gameModel.setActivePiece(null);
+                        gameModel.flipTurn();
+                        updateSeq = updateSeq% Long.MAX_VALUE + 1;
+                    }else{
+                        Piece desPiece = gameModel.getPieceAtLocation(toRank,toFile);
+                        if(activePiece.isFriendPiece(desPiece)){
+                            updateSeq = updateSeq% Long.MAX_VALUE + 1;
+                            gameModel.setActivePiece(desPiece);
+                        }
                     }
                 }
             }
+            updateNews = updateNews% Long.MAX_VALUE + 1;
         }
     }
 
@@ -152,8 +169,16 @@ public class ChessBoardController extends JApplet {
             if(boardView.getUpdateSeq()<updateSeq%Long.MAX_VALUE){
 //                System.out.println("update");
                 boardView.refreshBoard();
+                boardView.setUpdateSeq(updateSeq % Long.MAX_VALUE);
+                boardView.setWhiteScore(gameModel.getWhiteScore());
+                boardView.setBlackScore(gameModel.getBlackScore());
                 boardView.repaint();
-                boardView.setUpdateSeq(updateSeq%Long.MAX_VALUE);
+            }
+
+            if(boardView.getUpdateNews()<updateNews% Long.MAX_VALUE){
+                boardView.setGameFeedback(gameModel.getGameNews());
+                boardView.setUpdateNews(updateNews%Long.MAX_VALUE);
+                boardView.repaint();
             }
 
             // Delay timer to provide the necessary delay to meet the target rate

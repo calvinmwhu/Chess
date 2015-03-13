@@ -24,6 +24,9 @@ public class Game {
     private Stack<GameAction> redoStack;
     private Player turn;
     private Piece activePiece;
+    private int whiteScore;
+    private int blackScore;
+    private String gameNews;
 
     /**
      * constructor, creates an empty game, gives the turn to white player
@@ -31,8 +34,10 @@ public class Game {
     public Game() {
         turn = Player.WHITE;
         activePiece = null;
-        undoStack=new Stack<GameAction>();
-        redoStack=new Stack<GameAction>();
+        undoStack = new Stack<GameAction>();
+        redoStack = new Stack<GameAction>();
+        whiteScore = 0;
+        blackScore = 0;
     }
 
     /**
@@ -126,12 +131,40 @@ public class Game {
         activePiece = piece;
     }
 
-    public Stack<GameAction> getUndoStack(){
+    public Player getTurn() {
+        return turn;
+    }
+
+    public void flipTurn() {
+        if (turn == Player.BLACK) {
+            turn = Player.WHITE;
+        } else {
+            turn = Player.BLACK;
+        }
+    }
+
+    public String getGameNews() {
+        return gameNews;
+    }
+
+    public void setGameNews(String news) {
+        gameNews = news;
+    }
+
+    public Stack<GameAction> getUndoStack() {
         return undoStack;
     }
 
-    public Stack<GameAction> getRedoStack(){
+    public Stack<GameAction> getRedoStack() {
         return redoStack;
+    }
+
+    public int getWhiteScore(){
+        return whiteScore;
+    }
+
+    public int getBlackScore(){
+        return blackScore;
     }
 
     /**
@@ -141,7 +174,6 @@ public class Game {
     public HashMap<String, Piece> getPlayers(Player player) {
         return player == Player.WHITE ? whitePlayer : blackPlayer;
     }
-
 
 
     public boolean actionMoveTo(int toRank, int toFile) {
@@ -163,78 +195,82 @@ public class Game {
 
     public boolean pieceActionToPerform(int toRank, int toFile) {
         if (getPieceAtLocation(toRank, toFile) == null) {
-            boolean moveSuccess = actionMoveTo(toRank,toFile);
-            if(moveSuccess){
-                System.out.println(activePiece+" moves to ["+toRank+","+toFile+"]");
+            boolean moveSuccess = actionMoveTo(toRank, toFile);
+            if (moveSuccess) {
+//                gameNews = activePiece + " moves to [" + toRank + "," + toFile + "]";
+//                System.out.println(gameNews);
                 return true;
-            }else{
-                System.out.println(activePiece+" cannot move to ["+toRank+","+toFile+"]");
+            } else {
+//                gameNews = activePiece + " cannot move to [" + toRank + "," + toFile + "]";
+//                System.out.println(gameNews);
                 return false;
             }
         } else {
             Piece pieceKilled = actionKillPieceAtLocation(toRank, toFile);
-            if(pieceKilled!=null){
-                System.out.println(pieceKilled+" is killed by "+activePiece);
+            if (pieceKilled != null) {
+//                gameNews = pieceKilled + " is killed by " + activePiece;
+//                System.out.println(gameNews);
                 return true;
-            }else{
-                System.out.println(activePiece+" attempts an invalid kill!");
+            } else {
+//                gameNews = activePiece + " attempts an invalid kill!";
+//                System.out.println(gameNews);
                 return false;
             }
         }
     }
 
 
-    public boolean performAction(int toRank, int toFile){
-        GameAction currAction = new GameAction(toRank,toFile);
+    public boolean performAction(int toRank, int toFile) {
+        GameAction currAction = new GameAction(toRank, toFile);
         boolean success = currAction.performAction();
-        if(success){
+        if (success) {
             undoStack.push(currAction);
         }
         return success;
     }
 
-    public class GameAction{
+    public class GameAction {
         int toRank;
         int toFile;
-        BoardTile currentTile=null;
-        BoardTile toTile=null;
+        BoardTile currentTile = null;
+        BoardTile toTile = null;
 
-        Piece currPiece=null;
-        Piece pieceToKill=null;
+        Piece currPiece = null;
+        Piece pieceToKill = null;
 
-        HashSet<BoardTile> reachableTiles=new HashSet<BoardTile>();
+        HashSet<BoardTile> reachableTiles = new HashSet<BoardTile>();
 
-        public GameAction(int toRank, int toFile){
-            this.toRank=toRank;
-            this.toFile=toFile;
-            toTile = getTileAtLocation(toRank,toFile);
-            pieceToKill = getPieceAtLocation(toRank,toFile);
-            if(activePiece!=null){
+        public GameAction(int toRank, int toFile) {
+            this.toRank = toRank;
+            this.toFile = toFile;
+            toTile = getTileAtLocation(toRank, toFile);
+            pieceToKill = getPieceAtLocation(toRank, toFile);
+            if (activePiece != null) {
                 currPiece = activePiece;
                 reachableTiles = new HashSet<BoardTile>(activePiece.getReachableTiles());
                 currentTile = activePiece.getTileUnderPiece();
-            }else{
-                throw new NullPointerException() ;
+            } else {
+                throw new NullPointerException();
             }
         }
 
-        public HashSet<BoardTile> getCurrReachableTiles(){
+        public HashSet<BoardTile> getCurrReachableTiles() {
             return reachableTiles;
         }
 
-        public Piece getCurrPiece(){
+        public Piece getCurrPiece() {
             return currPiece;
         }
 
-        public Piece getPieceToKill(){
+        public Piece getPieceToKill() {
             return pieceToKill;
         }
 
-        public BoardTile getCurrentTile(){
+        public BoardTile getCurrentTile() {
             return currentTile;
         }
 
-        public BoardTile getDestinationTile(){
+        public BoardTile getDestinationTile() {
             return toTile;
         }
 
@@ -244,6 +280,7 @@ public class Game {
             }
             return false;
         }
+
         public Piece actionKill() {
             if (activePiece.killTargetPiece(pieceToKill)) {
                 return pieceToKill;
@@ -254,30 +291,39 @@ public class Game {
         public boolean performAction() {
             if (pieceToKill == null) {
                 boolean moveSuccess = actionMove();
-                if(moveSuccess){
-                    System.out.println(activePiece+" moves to ["+toRank+","+toFile+"]");
+                if (moveSuccess) {
+                    gameNews = activePiece + " moves to [" + toRank + "," + toFile + "]";
+                    System.out.println(gameNews);
                     return true;
-                }else{
-                    System.out.println(activePiece+" cannot move to ["+toRank+","+toFile+"]");
+                } else {
+                    gameNews = activePiece + " cannot move to [" + toRank + "," + toFile + "]";
+                    System.out.println(gameNews);
                     return false;
                 }
             } else {
                 Piece pieceKilled = actionKill();
-                if(pieceKilled!=null){
-                    System.out.println(pieceKilled+" is killed by "+activePiece);
+                if (pieceKilled != null) {
+                    gameNews = pieceKilled + " is killed by " + activePiece;
+                    System.out.println(gameNews);
+                    if(activePiece.getPlayer()==Player.WHITE){
+                        whiteScore++;
+                    }else{
+                        blackScore++;
+                    }
                     return true;
-                }else{
-                    System.out.println(activePiece+" attempts an invalid kill!");
+                } else {
+                    gameNews = activePiece + " attempts an invalid kill!";
+                    System.out.println(gameNews);
                     return false;
                 }
             }
         }
 
-        public void undoAction(){
+        public void undoAction() {
 
         }
 
-        public void redoAction(){
+        public void redoAction() {
 
         }
 
