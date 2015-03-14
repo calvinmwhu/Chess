@@ -48,6 +48,9 @@ public class ChessBoardController extends JApplet {
         return boardView;
     }
 
+    /**
+     * entry point of this applet
+     */
     public void init() {
         try {
             // Use invokeAndWait() to ensure that init() exits after GUI construction
@@ -82,6 +85,9 @@ public class ChessBoardController extends JApplet {
         updateSeq = updateSeq % Long.MAX_VALUE + 1;
     }
 
+    /**
+     * load chess board and pieces
+     */
     private void setupModelAndView() {
         setName("CS242 Chess Game");
         setLayout(new BorderLayout());
@@ -93,6 +99,9 @@ public class ChessBoardController extends JApplet {
         setVisible(true);
     }
 
+    /**
+     * MouseListener for clickable tiles
+     */
     private void addMouseListenerToTiles() {
         int height = BoardDimension.SQUARE.getHeight();
         int width = BoardDimension.SQUARE.getWidth();
@@ -106,6 +115,9 @@ public class ChessBoardController extends JApplet {
         }
     }
 
+    /**
+     * start button, when clicked, pieces are put onto the board
+     */
     private void addActionListenerToStart() {
         boardView.addStartListener(new ActionListener() {
             @Override
@@ -123,6 +135,9 @@ public class ChessBoardController extends JApplet {
         });
     }
 
+    /**
+     * Replace the rook and bishop with our customized pieces
+     */
     private void addActionListenerToCustomized() {
         boardView.addCustomizedListener(new ActionListener() {
             @Override
@@ -134,6 +149,9 @@ public class ChessBoardController extends JApplet {
         });
     }
 
+    /**
+     * Restart button listening, clears the board and restarts the game
+     */
     private void addActionListenerToRestart() {
         boardView.addRestartListener(new ActionListener() {
             @Override
@@ -150,7 +168,9 @@ public class ChessBoardController extends JApplet {
         });
     }
 
-
+    /**
+     * Forfeit button  listener, cause one side win immediately
+     */
     private void addActionListenerToForfeit() {
         boardView.addForfeitListener(new ActionListener() {
             @Override
@@ -166,6 +186,9 @@ public class ChessBoardController extends JApplet {
         });
     }
 
+    /**
+     * undo listener, restores the previous state
+     */
     private void addActionListenerToUndo() {
         boardView.addUndoListener(new ActionListener() {
             @Override
@@ -185,10 +208,18 @@ public class ChessBoardController extends JApplet {
         });
     }
 
+    /**
+     * wrapper for checking if a player is checkmate
+     * @param player
+     * @return
+     */
     public boolean checkMated(Player player) {
         return gameModel.checkMate(player);
     }
 
+    /**
+     * inner class for quickly retrieve the tile when a mouse clicks on a certain area
+     */
     class ImagePanelListener extends MouseAdapter {
         ImagePanel imagePanel;
 
@@ -253,7 +284,9 @@ public class ChessBoardController extends JApplet {
         }
     }
 
-
+    /**
+     * spawns a thread and enter game loop
+     */
     public void gameStart() {
         Thread gameThread = new Thread() {
             @Override
@@ -265,7 +298,9 @@ public class ChessBoardController extends JApplet {
         gameThread.start();
     }
 
-
+    /**
+     * check for update 45 times per second
+     */
     private void gameLoop() {
 
         long beginTime, timeTaken, timeLeft;   // in msec

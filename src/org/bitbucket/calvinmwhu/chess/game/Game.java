@@ -269,7 +269,12 @@ public class Game {
         }
     }
 
-
+    /**
+     * wrapper function for doing a move or kill from the activePiece
+     * @param toRank
+     * @param toFile
+     * @return
+     */
     public boolean performAction(int toRank, int toFile) {
         GameAction currAction = new GameAction(toRank, toFile);
         boolean success = currAction.performAction();
@@ -278,13 +283,10 @@ public class Game {
         }
         return success;
     }
-//
-//    public void performUndoAction(){
-//        Game.GameAction undoAction = undoStack.peek();
-//        undoAction.undoAction();
-//
-//    }
 
+    /**
+     * GameAction class for define game object for easy undo operation
+     */
     public class GameAction {
         int toRank;
         int toFile;
