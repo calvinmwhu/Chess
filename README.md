@@ -3,5 +3,5 @@
 <li>Includes a interactive gui implemented with Swing and AWT frameworks</li>
 <li>Includes common game logic like undo, restart, forfeit, etc.</li>
 <li>User can customize the game by add customized pieces, which is supported by the implementation</li>
-<img src=".images/sampleChessBoard.png">
+<img src="images/sampleChessBoard.png">
 </ul>
